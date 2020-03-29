@@ -1,0 +1,16 @@
+{
+  "name": "polendar",
+  "version": "1.0.0",
+  "main": "start.js",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "install-app-deps"
+  },
+  "devDependencies": {
+    "electron": "^8.2.0",
+    "electron-builder": "^22.4.1"
+  },
+  "dependencies": {
+    "sqlite3": "^4.1.1"
+  }
+}
