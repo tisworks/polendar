@@ -1,19 +1,22 @@
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('database.db');
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
 
-db.serialize(function() {
-    db.run("CREATE TABLE if not exists lorem (info TEXT)");
+const adapter = new FileSync('db.json')
+const db = low(adapter)
 
-    var stmt = db.prepare("INSERT INTO lorem VALUES (?)");
-    for (var i = 0; i < 10; i++) {
-        stmt.run("Ipsum " + i);
-    }
-    stmt.finalize();
+// Set some defaults (required if your JSON file is empty)
+db.defaults({ posts: [], user: {}, count: 0 })
+    .write()
 
-    db.each("SELECT rowid AS id, info FROM lorem", function(err, row) {
-        console.log(row.id + ": " + row.info);
-    });
-});
+// Add a post
+db.get('posts')
+    .push({ id: 1, title: 'lowdb is awesome'})
+    .write()
 
-db.close();
+// Set a user using Lodash shorthand syntax
+db.set('user.name', 'typicode')
+    .write()
 
+// Increment count
+db.update('count', n => n + 1)
+    .write()
