@@ -2,9 +2,12 @@
   "name": "polendar",
   "version": "1.0.0",
   "main": "start.js",
+  "description": "polendar project",
+  "repository": "https://github.com/tisworks/polendar",
+  "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "postinstall": "install-app-deps"
+    "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
     "electron": "^8.2.0",
