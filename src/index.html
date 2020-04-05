@@ -3,33 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Polendar</title>
-    <link rel="stylesheet" href="dependencies/semantic_ui/semantic.min.css">
 
+    <!-- Dependencies load -->
+    <link href="dependencies/semantic_ui/semantic.min.css" rel="stylesheet">
     <script src="dependencies/vue.js/vue.js"></script>
     <script src="dependencies/jquery/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
     <script src="dependencies/semantic_ui/semantic.min.js"></script>
+
+    <!-- Start load -->
     <script src="bootstrap.js" type="module"></script>
+    <script src="index.js" type="module"></script>
+</head>
+
 <body>
     <br>
-    <h1 class="ui center aligned header">Cadastro de Aluno</h1>
-    <div class="ui container">
-        <form class="ui form">
-            <div class="field">
-                <label for="studentName">Nome</label>
-                <input type="text" id="studentName">
-            </div>
-            <div class="field">
-                <label for="studentPhone">Telefone</label>
-                <input type="text" id="studentPhone">
-            </div>
-            <div class="field">
-                <label for="studentEmail">Email</label>
-                <input type="text" id="studentEmail">
-            </div>
-            <button class="ui positive button" type="button" id="addButton">Adicionar</button>
-            <button class="ui negative button" type="button" id="deleteButton">Deletar</button>
-        </form>
+    <div class="ui container" id="app">
+        <button class="ui button" type="button" v-on:click="studentAdd">Student</button>
     </div>
 </body>
+
+<div id="modals">
+    <student-form></student-form>
+    <script src="renderer/components/modal-form/student.js" type="module"></script>
+</div>
+
 </html>
 

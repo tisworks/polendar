@@ -9,4 +9,3 @@ const db = low(adapter);
 
 // Services
 StudentService.prototype.repository = new StudentRepository(db);
-
