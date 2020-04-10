@@ -1,6 +1,6 @@
-import { StudentForm } from "./student.js";
+import { StudentModal } from "./student.js";
 
-Vue.component('student-form', StudentForm);
+Vue.component('student-form', StudentModal);
 
 new Vue({
     el: '#modals'

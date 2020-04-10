@@ -1,7 +1,6 @@
 function studentAdd() {
-    $('.ui.modal.student-form')
-        .modal('show')
-    ;
+    $('.ui.modal.student-modal').modal('show');
+    $('.menu .item').tab();
 }
 
 new Vue({

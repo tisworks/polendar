@@ -26,48 +26,5 @@
     <script src="renderer/components/modal-form/bootstrap.js" type="module"></script>
     <student-form></student-form>
 </div>
-
-<div>
-    <div class="ui modal student-form">
-        <i class="close icon"></i>
-        <div class="header ui center aligned">Aluno</div>
-        <div class="ui content">
-            <div class="ui top attached tabular menu active">
-                <a class="item active" data-tab="add">Adicionar</a>
-                <a class="item" data-tab="search">Pesquisar</a>
-            </div>
-            <div class="ui bottom attached tab segment active" data-tab="add">
-                <form class="ui form">
-                    <div class="field">
-                        <label for="student-name">Nome</label>
-                        <input type="text" id="student-name" v-model="student.name">
-                    </div>
-                    <div class="field">
-                        <label for="student-phone">Telefone</label>
-                        <input type="text" id="student-phone" v-model="student.phone">
-                    </div>
-                    <div class="field">
-                        <label for="student-email">Email</label>
-                        <input type="text" id="student-email" v-model="student.email">
-                    </div>
-                    <div class="ui center aligned grid">
-                        <div class="column">
-                            <div class="ui right negative button">Cancelar</div>
-                            <div class="ui right positive button" v-on:click="add">Adicionar</div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="ui bottom attached tab segment" data-tab="search">
-                Second
-            </div>
-        </div>
-    </div>
-    <script>
-        $('.ui.modal.student-form').modal('show');
-        $('.menu .item').tab();
-    </script>
-</div>
-
 </html>
 
