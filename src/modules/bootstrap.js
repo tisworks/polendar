@@ -1,5 +1,5 @@
-import { StudentService } from "./modules/service/student.js";
-import { StudentRepository } from "./modules/repository/student.js";
+import { StudentService } from "./service/student.js";
+import { StudentRepository } from "./repository/student.js";
 
 // database initialization
 const low = require('lowdb');

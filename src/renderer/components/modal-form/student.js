@@ -1,7 +1,7 @@
 import { Student } from "../../../modules/model/student.js";
 import { StudentService } from "../../../modules/service/student.js"
 
-Vue.component('student-form', {
+export const StudentForm = {
     template:`
     <div class="ui modal student-form">
         <i class="close icon"></i>
@@ -39,8 +39,4 @@ Vue.component('student-form', {
     data: () => { return {
         student: new Student()
     }}
-})
-
-new Vue({
-    el: '#modals'
-})
+}
