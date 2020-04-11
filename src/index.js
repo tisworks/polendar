@@ -1,4 +1,4 @@
-function studentAdd() {
+function studentModal() {
     $('.ui.modal.student-modal').modal('show');
     $('.menu .item').tab();
 }
@@ -6,6 +6,6 @@ function studentAdd() {
 new Vue({
     el: '#app',
     methods: {
-        studentAdd: studentAdd
+        studentModal: studentModal
     }
 })

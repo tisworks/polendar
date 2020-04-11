@@ -1,6 +1,19 @@
 import {Student} from "../../../modules/model/student.js";
 import {StudentService} from "../../../modules/service/student.js"
 
+Vue.component('student-list-item', {
+    props: ['student'],
+    template: `
+    <div class="item">
+        <div class="content">
+            <a class="header">{{student.name}} - {{student.phone}}</a>
+            <div class="description">{{student.email}}</div>
+        </div>
+    </div>
+    `
+});
+
+
 export const StudentModal = {
     template: `
     <div class="ui modal student-modal">
@@ -38,7 +51,7 @@ export const StudentModal = {
                     <div class="field">
                         <div class="ui grid">
                             <div class="fourteen wide column">
-                                <input type="text" placeholder="Pesquisa..." v-model="search">
+                                <input type="text" placeholder="Pesquisa..." v-model="searchText">
                             </div>
                             <div class="two wide column">
                                 <div class="ui positive button" v-on:click="search">
@@ -49,27 +62,8 @@ export const StudentModal = {
                     </div>
                 </form>
                 <div class="ui relaxed divided list">
-                    <div class="item">
-                        <i class="large github middle aligned icon"></i>
-                        <div class="content">
-                            <a class="header">Semantic-Org/Semantic-UI</a>
-                            <div class="description">Updated 10 mins ago</div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <i class="large github middle aligned icon"></i>
-                        <div class="content">
-                            <a class="header">Semantic-Org/Semantic-UI-Docs</a>
-                            <div class="description">Updated 22 mins ago</div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <i class="large github middle aligned icon"></i>
-                        <div class="content">
-                            <a class="header">Semantic-Org/Semantic-UI-Meteor</a>
-                            <div class="description">Updated 34 mins ago</div>
-                        </div>
-                    </div>
+                    <student-list-item v-for="st in students" v-bind:key="st.phone" v-bind:student="st">
+                    </student-list-item>
                 </div>
             </div>
         </div>
@@ -80,12 +74,22 @@ export const StudentModal = {
         add: function () {
             //TODO validate students field
             StudentService.add(this.student)
+        },
+        search: function () {
+            this.students = StudentService.get().filter((student) => {
+                return student.name.toLowerCase().search(this.searchText) !== -1;
+            })
+        },
+        cancel: function () {
+
         }
     },
 
     data: () => {
         return {
-            student: new Student()
+            student: new Student(),
+            searchText: "",
+            students: []
         }
     }
 }

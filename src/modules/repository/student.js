@@ -9,6 +9,10 @@ export class StudentRepository {
     }
 
     add(student) {
-        this.db.get(schemaName).push(student).write()
+        this.db.get(schemaName).push(student).write();
+    }
+
+    get() {
+        return this.db.get(schemaName).value();
     }
 }
