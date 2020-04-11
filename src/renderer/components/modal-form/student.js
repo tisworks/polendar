@@ -32,7 +32,7 @@ Vue.component('student-form', {
             this.student = new Student()
         },
         cancel: function () {
-
+            this.student = new Student()
         }
     },
 
@@ -47,13 +47,68 @@ Vue.component('student-list-item', {
     props: ['student'],
 
     template: `
-    <div class="item">
-        <div class="content">
-            <a class="header">{{student.name}}</a>
-            <div class="description">{{student.phone}}<br>{{student.email}}</div>
+        <div class="item" v-if="show">
+            <div class="content">
+                <div class="ui grid">
+                    <div class="thirteen wide column">
+                        <a class="header">{{student.name}}</a>
+                        <div class="description">
+                            {{student.phone}}<br>{{student.email}}
+                        </div>        
+                    </div>
+                    <div class="three wide column">
+                        <div class="row">
+                            <div class="ui icon negative button" v-on:click="trash">
+                                <i class="trash icon"></i>
+                            </div>
+                            <div class="ui icon positive button" v-on:click="edit">
+                                <i class="edit icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ui mini modal hidden" :id="'student' + student.id">
+                <div class="header">
+                    Deletar Aluno
+                </div>
+                <div class="content">
+                    <p>Você tem certeza que deseja deletar o aluno?</p>
+                    <p>{{student.name}}</p>
+                </div>
+                <div class="actions">
+                    <div class="ui negative button">
+                        Não
+                    </div>
+                    <div class="ui positive button" v-on:click="deleteStudent">
+                        Sim
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    `
+    `,
+
+    methods: {
+        trash: function () {
+            $('#student' + this.student.id)
+                .modal('show')
+            ;
+        },
+        edit: function () {
+
+        },
+        deleteStudent: function () {
+            StudentService.delete(this.student.id);
+            this.show = false;
+        }
+    },
+
+    data: () => {
+        return {
+            show: true,
+        }
+    }
 });
 
 Vue.component('student-search', {
@@ -66,22 +121,25 @@ Vue.component('student-search', {
                         <input type="text" placeholder="Pesquisa..." v-model="searchText">
                     </div>
                     <div class="two wide column">
-                        <div class="ui positive button" v-on:click="search">
+                        <div class="ui icon positive button" v-on:click="search">
                             <i class="search icon"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
-        <div class="ui relaxed divided list">
-            <student-list-item v-for="st in students" v-bind:key="st.phone" v-bind:student="st">
-            </student-list-item>
+        <div class="ui segment scrolling content">
+            <div class="ui relaxed divided animated list">
+                <student-list-item v-for="st in students" v-bind:key="st.id" v-bind:student="st">
+                </student-list-item>
+            </div>
         </div>
     </div>
     `,
 
     methods: {
         search: function () {
+            // TODO: Fix not ASCII broken
             this.students = StudentService.get().filter((student) => {
                 return student.name.toLowerCase().search(this.searchText) !== -1;
             })

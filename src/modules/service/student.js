@@ -6,4 +6,8 @@ export class StudentService {
     static get() {
         return this.prototype.repository.get();
     }
+
+    static delete(id) {
+        this.prototype.repository.delete(id);
+    }
 }
