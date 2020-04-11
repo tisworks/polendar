@@ -1,19 +1,6 @@
 import {Student} from "../../../modules/model/student.js";
 import {StudentService} from "../../../modules/service/student.js"
 
-Vue.component('student-list-item', {
-    props: ['student'],
-
-    template: `
-    <div class="item">
-        <div class="content">
-            <a class="header">{{student.name}}</a>
-            <div class="description">{{student.phone}}<br>{{student.email}}</div>
-        </div>
-    </div>
-    `
-});
-
 Vue.component('student-form', {
     template: `
     <form class="ui form">
@@ -42,6 +29,7 @@ Vue.component('student-form', {
         add: function () {
             //TODO validate students field
             StudentService.add(this.student)
+            this.student = new Student()
         },
         cancel: function () {
 
@@ -53,6 +41,19 @@ Vue.component('student-form', {
             student: new Student()
         }
     }
+});
+
+Vue.component('student-list-item', {
+    props: ['student'],
+
+    template: `
+    <div class="item">
+        <div class="content">
+            <a class="header">{{student.name}}</a>
+            <div class="description">{{student.phone}}<br>{{student.email}}</div>
+        </div>
+    </div>
+    `
 });
 
 Vue.component('student-search', {
