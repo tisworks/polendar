@@ -3,16 +3,57 @@ import {StudentService} from "../../../modules/service/student.js"
 
 Vue.component('student-list-item', {
     props: ['student'],
+
     template: `
     <div class="item">
         <div class="content">
-            <a class="header">{{student.name}} - {{student.phone}}</a>
-            <div class="description">{{student.email}}</div>
+            <a class="header">{{student.name}}</a>
+            <div class="description">{{student.phone}}<br>{{student.email}}</div>
         </div>
     </div>
     `
 });
 
+Vue.component('student-form', {
+    template: `
+    <form class="ui form">
+        <div class="field">
+            <label for="student-name">Nome</label>
+            <input type="text" id="student-name" v-model="student.name">
+        </div>
+        <div class="field">
+            <label for="student-phone">Telefone</label>
+            <input type="text" id="student-phone" v-model="student.phone">
+        </div>
+        <div class="field">
+            <label for="student-email">Email</label>
+            <input type="text" id="student-email" v-model="student.email">
+        </div>
+        <div class="ui center aligned grid">
+            <div class="column">
+                <div class="ui negative button" v-on:click="cancel">Cancelar</div>
+                <div class="ui positive button" v-on:click="add">Adicionar</div>
+            </div>
+        </div>
+    </form>
+    `,
+
+    methods: {
+        add: function () {
+            //TODO validate students field
+            StudentService.add(this.student)
+        },
+        cancel: function () {
+
+        }
+    },
+
+    data: () => {
+        return {
+            student: new Student()
+        }
+    }
+});
 
 export const StudentModal = {
     template: `
@@ -25,26 +66,7 @@ export const StudentModal = {
                 <a class="item" data-tab="search">Pesquisar</a>
             </div>
             <div class="ui bottom attached tab segment active" data-tab="add">
-                <form class="ui form">
-                    <div class="field">
-                        <label for="student-name">Nome</label>
-                        <input type="text" id="student-name" v-model="student.name">
-                    </div>
-                    <div class="field">
-                        <label for="student-phone">Telefone</label>
-                        <input type="text" id="student-phone" v-model="student.phone">
-                    </div>
-                    <div class="field">
-                        <label for="student-email">Email</label>
-                        <input type="text" id="student-email" v-model="student.email">
-                    </div>
-                    <div class="ui center aligned grid">
-                        <div class="column">
-                            <div class="ui negative button" v-on:click="cancel">Cancelar</div>
-                            <div class="ui positive button" v-on:click="add">Adicionar</div>
-                        </div>
-                    </div>
-                </form>
+                <student-form></student-form>
             </div>
             <div class="ui bottom attached tab segment" data-tab="search">
                 <form class="ui form">
@@ -71,23 +93,15 @@ export const StudentModal = {
     `,
 
     methods: {
-        add: function () {
-            //TODO validate students field
-            StudentService.add(this.student)
-        },
         search: function () {
             this.students = StudentService.get().filter((student) => {
                 return student.name.toLowerCase().search(this.searchText) !== -1;
             })
-        },
-        cancel: function () {
-
         }
     },
 
     data: () => {
         return {
-            student: new Student(),
             searchText: "",
             students: []
         }
