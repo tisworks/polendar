@@ -55,39 +55,26 @@ Vue.component('student-form', {
     }
 });
 
-export const StudentModal = {
+Vue.component('student-search', {
     template: `
-    <div class="ui modal student-modal">
-        <i class="close icon"></i>
-        <div class="header ui center aligned">Aluno</div>
-        <div class="ui content">
-            <div class="ui top attached tabular menu active">
-                <a class="item active" data-tab="add">Adicionar</a>
-                <a class="item" data-tab="search">Pesquisar</a>
-            </div>
-            <div class="ui bottom attached tab segment active" data-tab="add">
-                <student-form></student-form>
-            </div>
-            <div class="ui bottom attached tab segment" data-tab="search">
-                <form class="ui form">
-                    <div class="field">
-                        <div class="ui grid">
-                            <div class="fourteen wide column">
-                                <input type="text" placeholder="Pesquisa..." v-model="searchText">
-                            </div>
-                            <div class="two wide column">
-                                <div class="ui positive button" v-on:click="search">
-                                    <i class="search icon"></i>
-                                </div>
-                            </div>
+    <div>
+        <form class="ui form">
+            <div class="field">
+                <div class="ui grid">
+                    <div class="fourteen wide column">
+                        <input type="text" placeholder="Pesquisa..." v-model="searchText">
+                    </div>
+                    <div class="two wide column">
+                        <div class="ui positive button" v-on:click="search">
+                            <i class="search icon"></i>
                         </div>
                     </div>
-                </form>
-                <div class="ui relaxed divided list">
-                    <student-list-item v-for="st in students" v-bind:key="st.phone" v-bind:student="st">
-                    </student-list-item>
                 </div>
             </div>
+        </form>
+        <div class="ui relaxed divided list">
+            <student-list-item v-for="st in students" v-bind:key="st.phone" v-bind:student="st">
+            </student-list-item>
         </div>
     </div>
     `,
@@ -106,4 +93,25 @@ export const StudentModal = {
             students: []
         }
     }
+});
+
+export const StudentModal = {
+    template: `
+    <div class="ui modal student-modal">
+        <i class="close icon"></i>
+        <div class="header ui center aligned">Aluno</div>
+        <div class="ui content">
+            <div class="ui top attached tabular menu active">
+                <a class="item active" data-tab="add">Adicionar</a>
+                <a class="item" data-tab="search">Pesquisar</a>
+            </div>
+            <div class="ui bottom attached tab segment active" data-tab="add">
+                <student-form></student-form>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="search">
+                <student-search></student-search>
+            </div>
+        </div>
+    </div>
+    `,
 }
