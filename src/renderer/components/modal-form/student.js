@@ -36,6 +36,11 @@ Vue.component('student-form', {
         }
     },
 
+    mounted: function () {
+        $('.menu .item').tab();
+        $('#student-phone').inputmask({"mask": "(99) 9 9999-9999"});
+    },
+
     data: () => {
         return {
             student: new Student()
@@ -69,7 +74,7 @@ Vue.component('student-list-item', {
                 </div>
             </div>
             
-            <div class="ui mini modal hidden" :id="'student' + student.id">
+            <div class="ui mini modal hidden" :id="'student-delete' + student.id">
                 <div class="header">
                     Deletar Aluno
                 </div>
@@ -86,21 +91,43 @@ Vue.component('student-list-item', {
                     </div>
                 </div>
             </div>
+            
+            <div class="ui mini modal hidden" :id="'student-edit' + student.id">
+                <div class="header">
+                    Aluno
+                </div>
+                <div class="content">
+                    <p>Você tem certeza que deseja deletar o aluno?</p>
+                    <p>{{student.name}}</p>
+                </div>
+                <div class="actions">
+                    <div class="ui negative button">
+                        Cancelar
+                    </div>
+                    <div class="ui positive button" v-on:click="editStudent">
+                        Confirmar
+                    </div>
+                </div>
+            </div>
         </div>
     `,
 
     methods: {
         trash: function () {
-            $('#student' + this.student.id)
+            $('#student-delete' + this.student.id)
                 .modal('show')
             ;
         },
         edit: function () {
-
+            $('#student-edit' + this.student.id)
+                .modal('show')
         },
         deleteStudent: function () {
             StudentService.delete(this.student.id);
             this.show = false;
+        },
+        editStudent: function () {
+
         }
     },
 
