@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
+
 <head>
     <meta charset="UTF-8">
     <title>Polendar</title>
@@ -16,14 +17,17 @@
 </head>
 
 <body>
-<br>
-<div class="ui container" id="app">
-    <button class="ui button" type="button" v-on:click="studentModal">Aluno</button>
-</div>
+    <br>
+    <div class="ui container" id="app">
+        <button class="ui button" type="button" v-on:click="studentModal">Aluno</button>
+        <button class="ui button" type="button" v-on:click="teacherModal">Professor</button>
+    </div>
 </body>
 
 <div id="modals">
     <script src="renderer/components/modal-form/bootstrap.js" type="module"></script>
     <student-modal></student-modal>
+    <teacher-modal></teacher-modal>
 </div>
+
 </html>

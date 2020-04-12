@@ -8,7 +8,7 @@ Vue.component('teacher-list-item', {
         <div class="item" v-if="showItem">
             <div class="content">
                 <div class="ui grid">
-                    <div class="thirteen wide column">
+                    <div class="nine wide column">
                         <a class="header">{{teacher.name}}</a>
                         <div class="description">
                             <b>Tel:</b> {{teacher.phone}}<br><b>Email:</b> {{teacher.email}}
@@ -18,8 +18,13 @@ Vue.component('teacher-list-item', {
                             <b>Banco: </b>{{teacher.bankName}}<br><b>Agência: </b>{{teacher.bankAgency}}<br><b>Conta: </b>{{teacher.bankAccount}}
                         </div>              
                     </div>
-                    <div class="three wide center aligned column">
+                    <div class="seven wide right aligned column">
                         <div class="row">
+                            <div class="ui negative compact message" v-if="deleteConfirm">
+                                Tem certeza?
+                                <div class="ui mini compact button" v-on:click="deleteTeacher">Sim</div>
+                                <div class="ui mini compact button" v-on:click="cancelDelete">Não</div>
+                            </div>
                             <div class="ui icon negative button" v-on:click="trash">
                                 <i class="trash icon"></i>
                             </div>
@@ -31,44 +36,28 @@ Vue.component('teacher-list-item', {
                 </div>
             </div>
         </div>
-<!--            <div class="ui mini modal hidden" :id="'teacher-delete' + teacher.id">-->
-<!--                <div class="header">-->
-<!--                    Deletar Professor-->
-<!--                </div>-->
-<!--                <div class="content">-->
-<!--                    <p>Você tem certeza que deseja deletar o professor?</p>-->
-<!--                    <p>{{teacher.name}}</p>-->
-<!--                </div>-->
-<!--                <div class="actions">-->
-<!--                    <div class="ui negative button">-->
-<!--                        Não-->
-<!--                    </div>-->
-<!--                    <div class="ui positive button" v-on:click="deleteTeacher">-->
-<!--                        Sim-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>  -->
     `,
 
     methods: {
         trash: function () {
-            // $('#teacher-delete' + this.teacher.id)
-            //     .modal('show')
-            // ;
+            this.deleteConfirm = true;
         },
         edit: function () {
-            this.$emit('edit:teacher', this.teacher)
+            this.$emit('edit:teacher', this.teacher);
         },
-        delete: function () {
+        deleteTeacher: function () {
             TeacherService.delete(this.teacher.id);
             this.showItem = false;
+        },
+        cancelDelete: function () {
+            this.deleteConfirm = false;
         }
     },
 
     data: () => {
         return {
             showItem: true,
+            deleteConfirm: false
         }
     }
 });
