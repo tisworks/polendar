@@ -10,4 +10,8 @@ export class StudentService {
     static delete(id) {
         this.prototype.repository.delete(id);
     }
+
+    static update(student) {
+        this.prototype.repository.update(student);
+    }
 }

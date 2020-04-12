@@ -35,4 +35,14 @@ export class StudentRepository {
 
         this.db.set(schemaName, students).write()
     }
+
+    update(student) {
+        let students = this.db.get(schemaName).value();
+
+        students.values.find((st) => {
+            st = student;
+        })
+
+        this.db.set(schemaName, students).write()
+    }
 }

@@ -1,58 +1,11 @@
 import {Student} from "../../../modules/model/student.js";
 import {StudentService} from "../../../modules/service/student.js"
 
-Vue.component('student-form', {
-    template: `
-    <form class="ui form">
-        <div class="field">
-            <label for="student-name">Nome</label>
-            <input type="text" id="student-name" v-model="student.name">
-        </div>
-        <div class="field">
-            <label for="student-phone">Telefone</label>
-            <input type="text" id="student-phone" v-model="student.phone">
-        </div>
-        <div class="field">
-            <label for="student-email">Email</label>
-            <input type="text" id="student-email" v-model="student.email">
-        </div>
-        <div class="ui center aligned grid">
-            <div class="column">
-                <div class="ui negative button" v-on:click="cancel">Cancelar</div>
-                <div class="ui positive button" v-on:click="add">Adicionar</div>
-            </div>
-        </div>
-    </form>
-    `,
-
-    methods: {
-        add: function () {
-            //TODO validate students field
-            StudentService.add(this.student)
-            this.student = new Student()
-        },
-        cancel: function () {
-            this.student = new Student()
-        }
-    },
-
-    mounted: function () {
-        $('.menu .item').tab();
-        $('#student-phone').inputmask({"mask": "(99) 9 9999-9999"});
-    },
-
-    data: () => {
-        return {
-            student: new Student()
-        }
-    }
-});
-
 Vue.component('student-list-item', {
     props: ['student'],
 
     template: `
-        <div class="item" v-if="show">
+        <div class="item" v-if="showItem">
             <div class="content">
                 <div class="ui grid">
                     <div class="thirteen wide column">
@@ -61,7 +14,7 @@ Vue.component('student-list-item', {
                             {{student.phone}}<br>{{student.email}}
                         </div>        
                     </div>
-                    <div class="three wide column">
+                    <div class="three wide center aligned column">
                         <div class="row">
                             <div class="ui icon negative button" v-on:click="trash">
                                 <i class="trash icon"></i>
@@ -73,67 +26,45 @@ Vue.component('student-list-item', {
                     </div>
                 </div>
             </div>
-            
-            <div class="ui mini modal hidden" :id="'student-delete' + student.id">
-                <div class="header">
-                    Deletar Aluno
-                </div>
-                <div class="content">
-                    <p>Você tem certeza que deseja deletar o aluno?</p>
-                    <p>{{student.name}}</p>
-                </div>
-                <div class="actions">
-                    <div class="ui negative button">
-                        Não
-                    </div>
-                    <div class="ui positive button" v-on:click="deleteStudent">
-                        Sim
-                    </div>
-                </div>
-            </div>
-            
-            <div class="ui mini modal hidden" :id="'student-edit' + student.id">
-                <div class="header">
-                    Aluno
-                </div>
-                <div class="content">
-                    <p>Você tem certeza que deseja deletar o aluno?</p>
-                    <p>{{student.name}}</p>
-                </div>
-                <div class="actions">
-                    <div class="ui negative button">
-                        Cancelar
-                    </div>
-                    <div class="ui positive button" v-on:click="editStudent">
-                        Confirmar
-                    </div>
-                </div>
-            </div>
         </div>
+<!--            <div class="ui mini modal hidden" :id="'student-delete' + student.id">-->
+<!--                <div class="header">-->
+<!--                    Deletar Aluno-->
+<!--                </div>-->
+<!--                <div class="content">-->
+<!--                    <p>Você tem certeza que deseja deletar o aluno?</p>-->
+<!--                    <p>{{student.name}}</p>-->
+<!--                </div>-->
+<!--                <div class="actions">-->
+<!--                    <div class="ui negative button">-->
+<!--                        Não-->
+<!--                    </div>-->
+<!--                    <div class="ui positive button" v-on:click="deleteStudent">-->
+<!--                        Sim-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>  -->
     `,
 
     methods: {
         trash: function () {
-            $('#student-delete' + this.student.id)
-                .modal('show')
-            ;
+            // $('#student-delete' + this.student.id)
+            //     .modal('show')
+            // ;
         },
         edit: function () {
-            $('#student-edit' + this.student.id)
-                .modal('show')
+            this.$emit('edit:student', this.student)
         },
         deleteStudent: function () {
             StudentService.delete(this.student.id);
-            this.show = false;
-        },
-        editStudent: function () {
-
+            this.showItem = false;
         }
     },
 
     data: () => {
         return {
-            show: true,
+            showItem: true,
         }
     }
 });
@@ -147,7 +78,7 @@ export const StudentModal = {
             <div class="ui grid">
                 <div class="thirteen wide column">
                     <div class="ui action input fluid">
-                        <input type="text" placeholder="Pesquisa...">
+                        <input type="text" placeholder="Pesquisa..." v-model="searchInput">
                         <div class="ui basic floating dropdown button">
                             <div class="text">Filtro</div>
                             <i class="dropdown icon"></i>
@@ -157,53 +88,45 @@ export const StudentModal = {
                                 <div class="item">Telefone</div>
                             </div>
                         </div>
-                        <div class="ui icon button"><i class="search icon"></i></div>
+                        <div class="ui icon blue button" v-on:click="search">
+                            <i class="search icon"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="center aligned three wide column">
-                    <div class="ui button">Adicionar</div>
+                    <div class="ui blue button" v-on:click="add">Adicionar</div>
                 </div>
             </div>
             <div class="ui segment" v-if="showInput">
                 <div class="ui labeled input">
                     <div class="ui label">Nome</div>
-                    <input type="text">
+                    <input type="text" v-model="student.name">
                 </div>
                 <div class="ui labeled input">
                     <div class="ui label">Telefone</div>
-                    <input type="text">
+                    <input type="text" id="student-phone" v-model="student.phone" v-mask="'(##) # ####-####'">
                 </div>
                 <div class="ui labeled input">
                     <div class="ui label">Email</div>
-                    <input type="text">
+                    <input type="text" v-model="student.email">
+                </div>
+                <div class="ui center aligned padded grid">
+                    <div class="row">
+                        <div class="ui buttons">
+                            <button class="ui negative button" v-on:click="cancel">Cancelar</button>
+                            <div class="or" data-text="ou"></div>
+                            <button class="ui positive button" v-on:click="confirm">Confirmar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-<!--            <div class="ui segment scrolling content">-->
-<!--                <div class="ui relaxed divided animated list">-->
-<!--                    <student-list-item v-for="st in students" v-bind:key="st.id" v-bind:student="st">-->
-<!--                    </student-list-item>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <form class="ui form">-->
-<!--                <div class="field">-->
-<!--                    <div class="ui grid">-->
-<!--                        <div class="fourteen wide column">-->
-<!--                            <input type="text" placeholder="Pesquisa..." v-model="searchText">-->
-<!--                        </div>-->
-<!--                        <div class="two wide column">-->
-<!--                            <div class="ui icon positive button" v-on:click="search">-->
-<!--                                <i class="search icon"></i>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </form>-->
-<!--            <div class="ui segment scrolling content">-->
-<!--                <div class="ui relaxed divided animated list">-->
-<!--                    <student-list-item v-for="st in students" v-bind:key="st.id" v-bind:student="st">-->
-<!--                    </student-list-item>-->
-<!--                </div>-->
-<!--            </div>-->
+            <div class="ui segment scrolling content">
+                <div class="ui relaxed divided animated list">
+                    <student-list-item v-for="st in students" v-bind:key="st.id" 
+                        v-bind:student="st" v-on:edit:student="student = $event; showInput = true">
+                    </student-list-item>
+                </div>
+            </div>
         </div>
     </div>
     `,
@@ -213,18 +136,36 @@ export const StudentModal = {
     },
 
     methods: {
+        add: function () {
+            this.showInput = true;
+        },
+        cancel: function () {
+            this.student = new Student();
+            this.showInput = false;
+        },
+        confirm: function () {
+            //TODO validate students field
+            if(this.student.id === 0) {
+                StudentService.add(this.student)
+            } else {
+                StudentService.update(this.student)
+            }
+            this.student = new Student()
+            this.showInput = false;
+        },
         search: function () {
             // TODO: Fix not ASCII broken
             this.students = StudentService.get().filter((student) => {
-                return student.name.toLowerCase().search(this.searchText) !== -1;
+                return student.name.toLowerCase().search(this.searchInput) !== -1;
             })
         }
     },
 
     data: () => {
         return {
-            showInput: true,
-            searchText: "",
+            student: new Student(),
+            showInput: false,
+            searchInput: "",
             students: []
         }
     }
