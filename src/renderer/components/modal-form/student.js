@@ -8,14 +8,19 @@ Vue.component('student-list-item', {
         <div class="item" v-if="showItem">
             <div class="content">
                 <div class="ui grid">
-                    <div class="thirteen wide column">
+                    <div class="nine wide column">
                         <a class="header">{{student.name}}</a>
                         <div class="description">
                             {{student.phone}}<br>{{student.email}}
                         </div>        
                     </div>
-                    <div class="three wide center aligned column">
+                    <div class="seven wide right aligned column">
                         <div class="row">
+                            <div class="ui negative compact message">
+                                Tem certeza?
+                                <div class="ui mini compact button" v-on:click="trash">Sim</div>
+                                <div class="ui mini compact button" v-on:click="trash">Não</div>
+                            </div>
                             <div class="ui icon negative button" v-on:click="trash">
                                 <i class="trash icon"></i>
                             </div>
@@ -27,31 +32,11 @@ Vue.component('student-list-item', {
                 </div>
             </div>
         </div>
-<!--            <div class="ui mini modal hidden" :id="'student-delete' + student.id">-->
-<!--                <div class="header">-->
-<!--                    Deletar Aluno-->
-<!--                </div>-->
-<!--                <div class="content">-->
-<!--                    <p>Você tem certeza que deseja deletar o aluno?</p>-->
-<!--                    <p>{{student.name}}</p>-->
-<!--                </div>-->
-<!--                <div class="actions">-->
-<!--                    <div class="ui negative button">-->
-<!--                        Não-->
-<!--                    </div>-->
-<!--                    <div class="ui positive button" v-on:click="deleteStudent">-->
-<!--                        Sim-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>  -->
     `,
 
     methods: {
         trash: function () {
-            // $('#student-delete' + this.student.id)
-            //     .modal('show')
-            // ;
+
         },
         edit: function () {
             this.$emit('edit:student', this.student)
