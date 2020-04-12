@@ -138,31 +138,59 @@ Vue.component('student-list-item', {
     }
 });
 
-Vue.component('student-search', {
+export const StudentModal = {
     template: `
-    <div>
-        <form class="ui form">
-            <div class="field">
-                <div class="ui grid">
-                    <div class="fourteen wide column">
-                        <input type="text" placeholder="Pesquisa..." v-model="searchText">
-                    </div>
-                    <div class="two wide column">
-                        <div class="ui icon positive button" v-on:click="search">
-                            <i class="search icon"></i>
+    <div class="ui modal student-modal">
+        <i class="close icon"></i>
+        <div class="header ui center aligned">Aluno</div>
+        <div class="ui content">
+            <div class="ui grid">
+                <div class="thirteen wide column">
+                    <div class="ui action input fluid">
+                        <input type="text" placeholder="Pesquisa...">
+                        <div class="ui basic floating dropdown button">
+                            <div class="text">Filtro</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item">Nome</div>
+                                <div class="item">Email</div>
+                                <div class="item">Telefone</div>
+                            </div>
                         </div>
+                        <div class="ui icon button"><i class="search icon"></i></div>
                     </div>
                 </div>
+                <div class="center aligned three wide column">
+                    <div class="ui button">Adicionar</div>
+                </div>
             </div>
-        </form>
-        <div class="ui segment scrolling content">
-            <div class="ui relaxed divided animated list">
-                <student-list-item v-for="st in students" v-bind:key="st.id" v-bind:student="st">
-                </student-list-item>
-            </div>
+<!--            <form class="ui form">-->
+<!--                <div class="field">-->
+<!--                    <div class="ui grid">-->
+<!--                        <div class="fourteen wide column">-->
+<!--                            <input type="text" placeholder="Pesquisa..." v-model="searchText">-->
+<!--                        </div>-->
+<!--                        <div class="two wide column">-->
+<!--                            <div class="ui icon positive button" v-on:click="search">-->
+<!--                                <i class="search icon"></i>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--            <div class="ui segment scrolling content">-->
+<!--                <div class="ui relaxed divided animated list">-->
+<!--                    <student-list-item v-for="st in students" v-bind:key="st.id" v-bind:student="st">-->
+<!--                    </student-list-item>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
     </div>
     `,
+
+    mounted: function () {
+        $('.ui.dropdown').dropdown();
+    },
 
     methods: {
         search: function () {
@@ -179,25 +207,4 @@ Vue.component('student-search', {
             students: []
         }
     }
-});
-
-export const StudentModal = {
-    template: `
-    <div class="ui modal student-modal">
-        <i class="close icon"></i>
-        <div class="header ui center aligned">Aluno</div>
-        <div class="ui content">
-            <div class="ui top attached tabular menu active">
-                <a class="item active" data-tab="add">Adicionar</a>
-                <a class="item" data-tab="search">Pesquisar</a>
-            </div>
-            <div class="ui bottom attached tab segment active" data-tab="add">
-                <student-form></student-form>
-            </div>
-            <div class="ui bottom attached tab segment" data-tab="search">
-                <student-search></student-search>
-            </div>
-        </div>
-    </div>
-    `,
 }
