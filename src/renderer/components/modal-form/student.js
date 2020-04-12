@@ -164,6 +164,26 @@ export const StudentModal = {
                     <div class="ui button">Adicionar</div>
                 </div>
             </div>
+            <div class="ui segment" v-if="showInput">
+                <div class="ui labeled input">
+                    <div class="ui label">Nome</div>
+                    <input type="text">
+                </div>
+                <div class="ui labeled input">
+                    <div class="ui label">Telefone</div>
+                    <input type="text">
+                </div>
+                <div class="ui labeled input">
+                    <div class="ui label">Email</div>
+                    <input type="text">
+                </div>
+            </div>
+<!--            <div class="ui segment scrolling content">-->
+<!--                <div class="ui relaxed divided animated list">-->
+<!--                    <student-list-item v-for="st in students" v-bind:key="st.id" v-bind:student="st">-->
+<!--                    </student-list-item>-->
+<!--                </div>-->
+<!--            </div>-->
 <!--            <form class="ui form">-->
 <!--                <div class="field">-->
 <!--                    <div class="ui grid">-->
@@ -203,6 +223,7 @@ export const StudentModal = {
 
     data: () => {
         return {
+            showInput: true,
             searchText: "",
             students: []
         }
