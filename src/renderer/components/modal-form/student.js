@@ -134,7 +134,7 @@ export const StudentModal = {
         },
         confirm: function () {
             //TODO validate students field
-            if(this.student.id === 0) {
+            if (this.student.id === 0) {
                 StudentService.add(this.student)
             } else {
                 StudentService.update(this.student)

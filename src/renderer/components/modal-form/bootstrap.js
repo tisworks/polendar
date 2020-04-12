@@ -1,4 +1,4 @@
-import { StudentModal } from "./student.js";
+import {StudentModal} from "./student.js";
 
 const vtm = require('vue-the-mask')
 Vue.use(vtm.TheMask)
