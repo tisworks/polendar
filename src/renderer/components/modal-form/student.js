@@ -16,10 +16,10 @@ Vue.component('student-list-item', {
                     </div>
                     <div class="seven wide right aligned column">
                         <div class="row">
-                            <div class="ui negative compact message">
+                            <div class="ui negative compact message" v-if="deleteConfirm">
                                 Tem certeza?
-                                <div class="ui mini compact button" v-on:click="trash">Sim</div>
-                                <div class="ui mini compact button" v-on:click="trash">Não</div>
+                                <div class="ui mini compact button" v-on:click="deleteStudent">Sim</div>
+                                <div class="ui mini compact button" v-on:click="cancelDelete">Não</div>
                             </div>
                             <div class="ui icon negative button" v-on:click="trash">
                                 <i class="trash icon"></i>
@@ -36,20 +36,24 @@ Vue.component('student-list-item', {
 
     methods: {
         trash: function () {
-
+            this.deleteConfirm = true;
         },
         edit: function () {
-            this.$emit('edit:student', this.student)
+            this.$emit('edit:student', this.student);
         },
         deleteStudent: function () {
             StudentService.delete(this.student.id);
             this.showItem = false;
+        },
+        cancelDelete: function () {
+            this.deleteConfirm = false;
         }
     },
 
     data: () => {
         return {
             showItem: true,
+            deleteConfirm: false
         }
     }
 });
