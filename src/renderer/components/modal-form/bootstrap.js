@@ -1,6 +1,9 @@
-import { StudentForm } from "./student.js";
+import {StudentModal} from "./student.js";
 
-Vue.component('student-form', StudentForm);
+const vtm = require('vue-the-mask')
+Vue.use(vtm.TheMask)
+
+Vue.component('student-modal', StudentModal);
 
 new Vue({
     el: '#modals'

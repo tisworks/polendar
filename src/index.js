@@ -1,12 +1,10 @@
-function studentAdd() {
-    $('.ui.modal.student-form')
-        .modal('show')
-    ;
+function studentModal() {
+    $('.ui.modal.student-modal').modal('show');
 }
 
 new Vue({
     el: '#app',
     methods: {
-        studentAdd: studentAdd
+        studentModal: studentModal
     }
 })
