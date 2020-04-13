@@ -2,6 +2,8 @@ import { StudentService } from "./service/student.js";
 import { StudentRepository } from "./repository/student.js";
 import { TeacherService } from "./service/teacher.js";
 import { TeacherRepository } from "./repository/teacher.js";
+import { LessonService } from "./service/lesson.js";
+import { LessonRepository } from "./repository/lesson.js";
 
 // database initialization
 const low = require('lowdb');
@@ -12,3 +14,4 @@ const db = low(adapter);
 // Services
 StudentService.prototype.repository = new StudentRepository(db);
 TeacherService.prototype.repository = new TeacherRepository(db);
+LessonService.prototype.repository = new LessonRepository(db);
