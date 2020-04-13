@@ -6,10 +6,15 @@ function teacherModal() {
     $('.ui.modal.teacher-modal').modal('show');
 }
 
+function groupModal() {
+    $('.ui.modal.group-modal').modal('show');
+}
+
 new Vue({
     el: '#app',
     methods: {
         studentModal: studentModal,
-        teacherModal: teacherModal
+        teacherModal: teacherModal,
+        groupModal: groupModal
     }
 })
