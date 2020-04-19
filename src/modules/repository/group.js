@@ -39,8 +39,8 @@ export class GroupRepository {
     update(group) {
         let groups = this.db.get(schemaName).value();
 
-        groups.values.find((st) => {
-            st = group;
+        groups.values.find((gr) => {
+            gr = group;
         })
 
         this.db.set(schemaName, groups).write()
