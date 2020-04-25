@@ -19,7 +19,7 @@ new Vue({
     methods: {
         studentModal: studentModal,
         teacherModal: teacherModal,
-        lessonModal: lessonModal
+        lessonModal: lessonModal,
         teacherModal: teacherModal,
         groupModal: groupModal
     }
