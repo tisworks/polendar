@@ -1,5 +1,7 @@
 import { Group } from "../../../modules/model/group.js";
 import { GroupService } from "../../../modules/service/group.js"
+import { Teacher } from "../../../modules/model/teacher.js";
+import { TeacherService } from "../../../modules/service/teacher.js"
 
 Vue.component('group-list-item', {
     props: ['group'],
@@ -106,6 +108,16 @@ export const GroupModal = {
                     <div class="ui label">Vagas</div>
                     <input type="text" v-model="group.numberOfVacancies">
                 </div>
+                </br></br>
+                <div class="ui fluid search selection dropdown">
+                    <input type="hidden" name="teacher" v-model="group.teacherId">
+                    <div class="default text">Selecione um(a) Professor(a)</div>
+                    <div class="menu">
+                        <div class="item" v-for="tc in teachers" v-bind:key="tc.id" v-bind:teacherId="tc.id">
+                            {{tc.name}}
+                        </div>
+                    </div>
+                </div>
                 <div class="ui center aligned padded grid">
                     <div class="row">
                         <div class="ui buttons">
@@ -134,6 +146,7 @@ export const GroupModal = {
     methods: {
         add: function () {
             this.showInput = true;
+            this.getTeachers();
         },
         cancel: function () {
             this.group = new Group();
@@ -154,15 +167,20 @@ export const GroupModal = {
             this.groups = GroupService.get().filter((group) => {
                 return group.identification.toLowerCase().search(this.searchInput) !== -1;
             })
+        },
+        getTeachers: function () {
+            this.teachers = TeacherService.get();
         }
     },
 
     data: () => {
         return {
             group: new Group(),
+            teacher: new Teacher(),
             showInput: false,
             searchInput: "",
-            groups: []
+            groups: [],
+            teachers: []
         }
     }
 }
