@@ -1,5 +1,7 @@
 import { Group } from "../../../modules/model/group.js";
 import { GroupService } from "../../../modules/service/group.js"
+import { Student } from "../../../modules/model/student.js"
+import { StudentService } from "../../../modules/service/student.js"
 
 Vue.component('group-list-item', {
     props: ['group'],
@@ -106,6 +108,12 @@ export const GroupModal = {
                     <div class="ui label">Vagas</div>
                     <input type="text" v-model="group.numberOfVacancies">
                 </div>
+                </br></br>
+                <select class="ui fluid search dropdown" multiple="">
+                    <option v-for="st in this.students" v-bind:key="st.id">
+                            {{st.name}}
+                    </option>
+                </select>                
                 <div class="ui center aligned padded grid">
                     <div class="row">
                         <div class="ui buttons">
@@ -134,6 +142,7 @@ export const GroupModal = {
     methods: {
         add: function () {
             this.showInput = true;
+            this.getStudents();
         },
         cancel: function () {
             this.group = new Group();
@@ -154,15 +163,20 @@ export const GroupModal = {
             this.groups = GroupService.get().filter((group) => {
                 return group.identification.toLowerCase().search(this.searchInput) !== -1;
             })
+        },
+        getStudents: function(){
+            this.students = StudentService.get();            
         }
     },
 
     data: () => {
         return {
             group: new Group(),
+            student: new Student(),
             showInput: false,
             searchInput: "",
-            groups: []
+            groups: [],
+            students: []
         }
     }
 }
