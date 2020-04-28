@@ -71,7 +71,7 @@ export const GroupModal = {
             <div class="ui grid">
                 <div class="thirteen wide column">
                     <div class="ui action input fluid">
-                        <input type="text" placeholder="Pesquisa..." v-model="searchInput">
+                        <input type="text" placeholder="Pesquisa..." v-model="searchInput"/>
                         <div class="ui basic floating dropdown button">
                             <div class="text">Filtro</div>
                             <i class="dropdown icon"></i>
@@ -93,27 +93,27 @@ export const GroupModal = {
             <div class="ui segment" v-if="showInput">
                 <div class="ui labeled input">
                     <div class="ui label">Identificação</div>
-                    <input type="text" v-model="group.identification">
+                    <input type="text" v-model="group.identification"/>
                 </div>
                 <div class="ui labeled input">
                     <div class="ui label">Modalidade</div>
-                    <input type="text" v-model="group.modality">
+                    <input type="text" v-model="group.modality"/>
                 </div>
                 </br></br>
                 <div class="ui labeled input">
                     <div class="ui label">Horário</div>
-                    <input type="text" v-model="group.scheduledTime">
+                    <input type="text" v-model="group.scheduledTime"/>
                 </div>
                 <div class="ui labeled input">
                     <div class="ui label">Vagas</div>
-                    <input type="text" v-model="group.numberOfVacancies">
+                    <input type="text" v-model="group.numberOfVacancies"/>
                 </div>
-                </br></br>
+                <br/><br/>
                 <div class="ui fluid search selection dropdown">
                     <input type="hidden" name="teacher" v-model="group.teacherId">
                     <div class="default text">Selecione um(a) Professor(a)</div>
                     <div class="menu">
-                        <div class="item" v-for="tc in teachers" v-bind:key="tc.id" v-bind:teacherId="tc.id">
+                        <div class="item" v-for="tc in teachers" :key="tc.id" v-bind:this.group.teacherId="tc.id">
                             {{tc.name}}
                         </div>
                     </div>
@@ -141,6 +141,7 @@ export const GroupModal = {
 
     mounted: function () {
         $('.ui.dropdown').dropdown();
+        $('.ui.fluid.search.selection.dropdown').dropdown();
     },
 
     methods: {
