@@ -62,6 +62,26 @@ Vue.component('group-list-item', {
     }
 });
 
+Vue.component('teacher-dropdown', {
+
+    template: `
+        <div class="ui fluid search selection dropdown" id="teste">
+            <input type="hidden" name="country">
+            <i class="dropdown icon"></i>
+            <div class="default text">Select Country</div>
+            <div class="menu">
+                <div class="item" data-value="af"><i class="af flag"></i>Afghanistan</div>
+                <div class="item" data-value="ax"><i class="ax flag"></i>Aland Islands</div>
+            </div>
+        </div>
+    `,
+
+    mounted: function () {
+        $('#teste').dropdown();
+    },
+});
+
+
 export const GroupModal = {
     template: `
     <div class="ui modal group-modal">
@@ -118,6 +138,7 @@ export const GroupModal = {
                         </div>
                     </div>
                 </div>
+                <teacher-dropdown></teacher-dropdown>
                 <div class="ui center aligned padded grid">
                     <div class="row">
                         <div class="ui buttons">
@@ -141,7 +162,6 @@ export const GroupModal = {
 
     mounted: function () {
         $('.ui.dropdown').dropdown();
-        $('.ui.fluid.search.selection.dropdown').dropdown();
     },
 
     methods: {
