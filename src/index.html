@@ -16,13 +16,39 @@
     <script src="index.js" type="module"></script>
 </head>
 
-<body>
-    <br>
+<body style="background-color:#6f9ee8">
+    <br><br><br>
     <div class="ui container" id="app">
-        <button class="ui button" type="button" v-on:click="studentModal">Aluno</button>
-        <button class="ui button" type="button" v-on:click="teacherModal">Professor</button>
-        <button class="ui button" type="button" v-on:click="groupModal">Turma</button>
-        <button class="ui button" type="button" v-on:click="lessonModal">Aula</button>
+        <div class="ui five column centered grid">
+            <div class="row">
+                <div class="column">
+                    <div class="ui small circular rotate left reveal image" v-on:click="studentModal">
+                        <img src="static/img/student.png" class="visible content" style="background-color:#6f9ee8">
+                        <img src="static/img/alunos.png" class="hidden content">
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui small circular rotate left reveal image" v-on:click="teacherModal">
+                        <img src="static/img/teacher.png" class="visible content" style="background-color:#6f9ee8">
+                        <img src="static/img/professores.png" class="hidden content">
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui small circular rotate left reveal image" v-on:click="groupModal">
+                        <img src="static/img/group.png" class="visible content" style="background-color:#6f9ee8">
+                        <img src="static/img/turmas.png" class="hidden content">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <div class="ui small circular rotate left reveal image" v-on:click="lessonModal">
+                        <img src="static/img/lesson.png" class="visible content" style="background-color:#6f9ee8">
+                        <img src="static/img/aulas.png" class="hidden content">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

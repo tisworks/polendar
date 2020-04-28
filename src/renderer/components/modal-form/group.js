@@ -2,6 +2,8 @@ import { Group } from "../../../modules/model/group.js";
 import { GroupService } from "../../../modules/service/group.js"
 import { Student } from "../../../modules/model/student.js"
 import { StudentService } from "../../../modules/service/student.js"
+import { Teacher } from "../../../modules/model/teacher.js";
+import { TeacherService } from "../../../modules/service/teacher.js"
 
 Vue.component('group-list-item', {
     props: ['group'],
@@ -16,6 +18,7 @@ Vue.component('group-list-item', {
                             <b>Modalidade:</b> {{group.modality}}
                             <br><b>Horário:</b> {{group.scheduledTime}}
                             <br><b>Vagas:</b> {{group.numberOfVacancies}}
+                            <br><b>Professor(a):</b> {{group.teacherId}}
                             <br><b>Alunos:</b> {{group.studentsIds}}
                         </div>                                     
                     </div>
@@ -63,6 +66,39 @@ Vue.component('group-list-item', {
     }
 });
 
+Vue.component('teacher-dropdown', {
+    props: ['teacherId'],
+
+    template: `
+        <div class="ui fluid search selection dropdown" id="teacherSelect">
+            <input type="hidden" name="teacher" v-model="teacherId">
+            <div class="default text">Selecione um(a) Professor(a)</div>
+            <div class="menu">
+                <div class="item" v-bind:id="tc.id" v-for="tc in teachers" :key="tc.id">
+                    {{tc.name}}
+                </div>
+            </div>
+        </div>
+    `,
+
+    mounted: function () {
+        $('#teacherSelect').dropdown();
+        this.getTeachers();
+    },
+
+    data: () => {
+        return {
+            teachers: []
+        }
+    },
+
+    methods: {
+        getTeachers: function () {
+            this.teachers = TeacherService.get();
+        }
+    }
+});
+
 Vue.component('student-dropdown',{
     props: ['students'],
 
@@ -104,7 +140,7 @@ export const GroupModal = {
             <div class="ui grid">
                 <div class="thirteen wide column">
                     <div class="ui action input fluid">
-                        <input type="text" placeholder="Pesquisa..." v-model="searchInput">
+                        <input type="text" placeholder="Pesquisa..." v-model="searchInput"/>
                         <div class="ui basic floating dropdown button">
                             <div class="text">Filtro</div>
                             <i class="dropdown icon"></i>
@@ -124,27 +160,38 @@ export const GroupModal = {
                 </div>
             </div>
             <div class="ui segment" v-if="showInput">
-                <div class="ui labeled input">
-                    <div class="ui label">Identificação</div>
-                    <input type="text" v-model="group.identification">
+                <div class="ui grid">
+                    <div class="eight wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Identificação</div>
+                            <input type="text" v-model="group.identification"/>
+                        </div>
+                    </div>
+                    <div class="eight wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Modalidade</div>
+                            <input type="text" v-model="group.modality"/>
+                        </div>
+                    </div>
+                    <div class="eight wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Horário</div>
+                            <input type="text" v-model="group.scheduledTime"/>
+                        </div>
+                    </div>
+                    <div class="eight wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Vagas</div>
+                            <input type="text" v-model="group.numberOfVacancies"/>
+                        </div>
+                    </div>
+                    <div class="sixteen wide column">
+                        <teacher-dropdown></teacher-dropdown>
+                    </div>
+										<div class="sixteen wide column">
+                        <student-dropdown></student-dropdown>
+                    </div>
                 </div>
-                <div class="ui labeled input">
-                    <div class="ui label">Modalidade</div>
-                    <input type="text" v-model="group.modality">
-                </div>
-                </br></br>
-                <div class="ui labeled input">
-                    <div class="ui label">Horário</div>
-                    <input type="text" v-model="group.scheduledTime">
-                </div>
-                <div class="ui labeled input">
-                    <div class="ui label">Vagas</div>
-                    <input type="text" v-model="group.numberOfVacancies">
-                </div>
-                </br></br>  
-
-                <student-dropdown></student-dropdown>
-
                 <div class="ui center aligned padded grid">
                     <div class="row">
                         <div class="ui buttons">
@@ -180,17 +227,22 @@ export const GroupModal = {
         },
         confirm: function () {
             //TODO validate groups field 
-            let studentsArray = [];        
+            let studentsArray = [];   
+					
             Array.from(document.getElementsByClassName('item active filtered')).forEach((a) => {
                 if(a != undefined)
                     studentsArray.push(a.id);
             });
+					
             this.group.studentsIds = studentsArray;
+            this.group.teacherId = document.getElementsByClassName('item active selected')[0].id;
+
             if (this.group.id === 0) {
                 GroupService.add(this.group)
             } else {
                 GroupService.update(this.group)
             }
+					
             this.group = new Group()
             this.showInput = false;
         },
@@ -209,7 +261,9 @@ export const GroupModal = {
             showInput: false,
             searchInput: "",
             groups: [],
-            students: []
+            students: [],
+            teacher: new Teacher(),
+            teacherId: ""
         }
     }
 }
