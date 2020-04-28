@@ -1,5 +1,7 @@
 import { Group } from "../../../modules/model/group.js";
 import { GroupService } from "../../../modules/service/group.js"
+import { Student } from "../../../modules/model/student.js"
+import { StudentService } from "../../../modules/service/student.js"
 import { Teacher } from "../../../modules/model/teacher.js";
 import { TeacherService } from "../../../modules/service/teacher.js"
 
@@ -17,6 +19,7 @@ Vue.component('group-list-item', {
                             <br><b>Horário:</b> {{group.scheduledTime}}
                             <br><b>Vagas:</b> {{group.numberOfVacancies}}
                             <br><b>Professor(a):</b> {{group.teacherId}}
+                            <br><b>Alunos:</b> {{group.studentsIds}}
                         </div>                                     
                     </div>
                     <div class="seven wide right aligned column">
@@ -96,6 +99,37 @@ Vue.component('teacher-dropdown', {
     }
 });
 
+Vue.component('student-dropdown',{
+    props: ['students'],
+
+    template:`    
+        <div class="ui fluid multiple search normal selection dropdown" id="teste">
+            <input type="hidden">
+            <div class="default text">Selecione os alunos</div>
+            <div class="menu">
+                <div class="item" v-bind:id="st.id" v-for="st in allStudents" v-bind:key="st.id">{{st.name}}</div>                     
+            </div>
+        </div>
+    `,
+
+    mounted: function () {
+        $('#teste').dropdown();
+        this.getStudents();
+    },
+
+    data: () => {
+        return {
+            student: new Student(),
+            allStudents: []
+        }
+    },
+
+    methods: {
+        getStudents: function(){
+            this.allStudents = StudentService.get();            
+        }
+    }
+});
 
 export const GroupModal = {
     template: `
@@ -154,6 +188,9 @@ export const GroupModal = {
                     <div class="sixteen wide column">
                         <teacher-dropdown></teacher-dropdown>
                     </div>
+										<div class="sixteen wide column">
+                        <student-dropdown></student-dropdown>
+                    </div>
                 </div>
                 <div class="ui center aligned padded grid">
                     <div class="row">
@@ -189,7 +226,15 @@ export const GroupModal = {
             this.showInput = false;
         },
         confirm: function () {
-            //TODO validate groups field
+            //TODO validate groups field 
+            let studentsArray = [];   
+					
+            Array.from(document.getElementsByClassName('item active filtered')).forEach((a) => {
+                if(a != undefined)
+                    studentsArray.push(a.id);
+            });
+					
+            this.group.studentsIds = studentsArray;
             this.group.teacherId = document.getElementsByClassName('item active selected')[0].id;
 
             if (this.group.id === 0) {
@@ -197,6 +242,7 @@ export const GroupModal = {
             } else {
                 GroupService.update(this.group)
             }
+					
             this.group = new Group()
             this.showInput = false;
         },
@@ -205,16 +251,18 @@ export const GroupModal = {
             this.groups = GroupService.get().filter((group) => {
                 return group.identification.toLowerCase().search(this.searchInput) !== -1;
             })
-        }
+        },
     },
 
     data: () => {
         return {
             group: new Group(),
-            teacher: new Teacher(),
+            student: new Student(),
             showInput: false,
             searchInput: "",
             groups: [],
+            students: [],
+            teacher: new Teacher(),
             teacherId: ""
         }
     }
