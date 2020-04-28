@@ -16,6 +16,7 @@ Vue.component('group-list-item', {
                             <b>Modalidade:</b> {{group.modality}}
                             <br><b>Horário:</b> {{group.scheduledTime}}
                             <br><b>Vagas:</b> {{group.numberOfVacancies}}
+                            <br><b>Professor(a):</b> {{group.teacherId}}
                         </div>                                     
                     </div>
                     <div class="seven wide right aligned column">
@@ -63,22 +64,36 @@ Vue.component('group-list-item', {
 });
 
 Vue.component('teacher-dropdown', {
+    props: ['teacherId'],
 
     template: `
-        <div class="ui fluid search selection dropdown" id="teste">
-            <input type="hidden" name="country">
-            <i class="dropdown icon"></i>
-            <div class="default text">Select Country</div>
+        <div class="ui fluid search selection dropdown" id="teacherSelect">
+            <input type="hidden" name="teacher" v-model="teacherId">
+            <div class="default text">Selecione um(a) Professor(a)</div>
             <div class="menu">
-                <div class="item" data-value="af"><i class="af flag"></i>Afghanistan</div>
-                <div class="item" data-value="ax"><i class="ax flag"></i>Aland Islands</div>
+                <div class="item" v-bind:id="tc.id" v-for="tc in teachers" :key="tc.id">
+                    {{tc.name}}
+                </div>
             </div>
         </div>
     `,
 
     mounted: function () {
-        $('#teste').dropdown();
+        $('#teacherSelect').dropdown();
+        this.getTeachers();
     },
+
+    data: () => {
+        return {
+            teachers: []
+        }
+    },
+
+    methods: {
+        getTeachers: function () {
+            this.teachers = TeacherService.get();
+        }
+    }
 });
 
 
@@ -111,34 +126,35 @@ export const GroupModal = {
                 </div>
             </div>
             <div class="ui segment" v-if="showInput">
-                <div class="ui labeled input">
-                    <div class="ui label">Identificação</div>
-                    <input type="text" v-model="group.identification"/>
-                </div>
-                <div class="ui labeled input">
-                    <div class="ui label">Modalidade</div>
-                    <input type="text" v-model="group.modality"/>
-                </div>
-                </br></br>
-                <div class="ui labeled input">
-                    <div class="ui label">Horário</div>
-                    <input type="text" v-model="group.scheduledTime"/>
-                </div>
-                <div class="ui labeled input">
-                    <div class="ui label">Vagas</div>
-                    <input type="text" v-model="group.numberOfVacancies"/>
-                </div>
-                <br/><br/>
-                <div class="ui fluid search selection dropdown">
-                    <input type="hidden" name="teacher" v-model="group.teacherId">
-                    <div class="default text">Selecione um(a) Professor(a)</div>
-                    <div class="menu">
-                        <div class="item" v-for="tc in teachers" :key="tc.id" v-bind:this.group.teacherId="tc.id">
-                            {{tc.name}}
+                <div class="ui grid">
+                    <div class="eight wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Identificação</div>
+                            <input type="text" v-model="group.identification"/>
                         </div>
                     </div>
+                    <div class="eight wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Modalidade</div>
+                            <input type="text" v-model="group.modality"/>
+                        </div>
+                    </div>
+                    <div class="eight wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Horário</div>
+                            <input type="text" v-model="group.scheduledTime"/>
+                        </div>
+                    </div>
+                    <div class="eight wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Vagas</div>
+                            <input type="text" v-model="group.numberOfVacancies"/>
+                        </div>
+                    </div>
+                    <div class="sixteen wide column">
+                        <teacher-dropdown></teacher-dropdown>
+                    </div>
                 </div>
-                <teacher-dropdown></teacher-dropdown>
                 <div class="ui center aligned padded grid">
                     <div class="row">
                         <div class="ui buttons">
@@ -167,7 +183,6 @@ export const GroupModal = {
     methods: {
         add: function () {
             this.showInput = true;
-            this.getTeachers();
         },
         cancel: function () {
             this.group = new Group();
@@ -175,6 +190,8 @@ export const GroupModal = {
         },
         confirm: function () {
             //TODO validate groups field
+            this.group.teacherId = document.getElementsByClassName('item active selected')[0].id;
+
             if (this.group.id === 0) {
                 GroupService.add(this.group)
             } else {
@@ -188,9 +205,6 @@ export const GroupModal = {
             this.groups = GroupService.get().filter((group) => {
                 return group.identification.toLowerCase().search(this.searchInput) !== -1;
             })
-        },
-        getTeachers: function () {
-            this.teachers = TeacherService.get();
         }
     },
 
@@ -201,7 +215,7 @@ export const GroupModal = {
             showInput: false,
             searchInput: "",
             groups: [],
-            teachers: []
+            teacherId: ""
         }
     }
 }
