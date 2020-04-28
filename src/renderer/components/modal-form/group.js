@@ -16,6 +16,7 @@ Vue.component('group-list-item', {
                             <b>Modalidade:</b> {{group.modality}}
                             <br><b>Horário:</b> {{group.scheduledTime}}
                             <br><b>Vagas:</b> {{group.numberOfVacancies}}
+                            <br><b>Alunos:</b> {{group.studentsIds}}
                         </div>                                     
                     </div>
                     <div class="seven wide right aligned column">
@@ -58,6 +59,38 @@ Vue.component('group-list-item', {
         return {
             showItem: true,
             deleteConfirm: false
+        }
+    }
+});
+
+Vue.component('student-dropdown',{
+    props: ['students'],
+
+    template:`    
+        <div class="ui fluid multiple search normal selection dropdown" id="teste">
+            <input type="hidden">
+            <div class="default text">Selecione os alunos</div>
+            <div class="menu">
+                <div class="item" v-bind:id="st.id" v-for="st in allStudents" v-bind:key="st.id">{{st.name}}</div>                     
+            </div>
+        </div>
+    `,
+
+    mounted: function () {
+        $('#teste').dropdown();
+        this.getStudents();
+    },
+
+    data: () => {
+        return {
+            student: new Student(),
+            allStudents: []
+        }
+    },
+
+    methods: {
+        getStudents: function(){
+            this.allStudents = StudentService.get();            
         }
     }
 });
@@ -108,12 +141,10 @@ export const GroupModal = {
                     <div class="ui label">Vagas</div>
                     <input type="text" v-model="group.numberOfVacancies">
                 </div>
-                </br></br>
-                <select class="ui fluid search dropdown" multiple="">
-                    <option v-for="st in this.students" v-bind:key="st.id">
-                            {{st.name}}
-                    </option>
-                </select>                
+                </br></br>  
+
+                <student-dropdown></student-dropdown>
+
                 <div class="ui center aligned padded grid">
                     <div class="row">
                         <div class="ui buttons">
@@ -142,14 +173,19 @@ export const GroupModal = {
     methods: {
         add: function () {
             this.showInput = true;
-            this.getStudents();
         },
         cancel: function () {
             this.group = new Group();
             this.showInput = false;
         },
         confirm: function () {
-            //TODO validate groups field
+            //TODO validate groups field 
+            let studentsArray = [];        
+            Array.from(document.getElementsByClassName('item active filtered')).forEach((a) => {
+                if(a != undefined)
+                    studentsArray.push(a.id);
+            });
+            this.group.studentsIds = studentsArray;
             if (this.group.id === 0) {
                 GroupService.add(this.group)
             } else {
@@ -164,9 +200,6 @@ export const GroupModal = {
                 return group.identification.toLowerCase().search(this.searchInput) !== -1;
             })
         },
-        getStudents: function(){
-            this.students = StudentService.get();            
-        }
     },
 
     data: () => {
