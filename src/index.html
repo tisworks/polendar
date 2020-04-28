@@ -16,27 +16,36 @@
     <script src="index.js" type="module"></script>
 </head>
 
-<style>
-    html, body {
-        height: 100%;
-    }
-
-    .ui.grid {
-        height: 100%;
-    }
-</style>
-
 <body style="background-color:#6f9ee8">
     <br><br><br>
     <div class="ui container" id="app">
         <div class="ui five column centered grid">
             <div class="row">
-                <div class="column"><img class="ui small circular image" src="static/img/student.png" v-on:click="studentModal" style="background-color:white"></div>
-                <div class="column"><img class="ui small circular image" src="static/img/teacher.png" v-on:click="teacherModal" style="background-color:white"></div>
-                <div class="column"><img class="ui small circular image" src="static/img/group.png" v-on:click="groupModal" style="background-color:white"></div>
+                <div class="column">
+                    <div class="ui small circular rotate left reveal image" v-on:click="studentModal">
+                        <img src="static/img/student.png" class="visible content" style="background-color:#6f9ee8">
+                        <img src="static/img/alunos.png" class="hidden content">
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui small circular rotate left reveal image" v-on:click="teacherModal">
+                        <img src="static/img/teacher.png" class="visible content" style="background-color:#6f9ee8">
+                        <img src="static/img/professores.png" class="hidden content">
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui small circular rotate left reveal image" v-on:click="groupModal">
+                        <img src="static/img/group.png" class="visible content" style="background-color:#6f9ee8">
+                        <img src="static/img/turmas.png" class="hidden content">
+                    </div>
+                </div>
             </div>
             <div class="row">
-                <div class="column"><img class="ui small circular image" src="static/img/lesson.png" v-on:click="lessonModal" style="background-color:white"></div>
+                <div class="column">
+                    <div class="ui small circular rotate left reveal image" v-on:click="lessonModal">
+                        <img src="static/img/lesson.png" class="visible content" style="background-color:#6f9ee8">
+                        <img src="static/img/aulas.png" class="hidden content">
+                    </div>
             </div>
         </div>
     </div>
