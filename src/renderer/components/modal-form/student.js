@@ -1,5 +1,5 @@
-import {Student} from "../../../modules/model/student.js";
-import {StudentService} from "../../../modules/service/student.js"
+import { Student } from "../../../modules/model/student.js";
+import { StudentService } from "../../../modules/service/student.js"
 
 Vue.component('student-list-item', {
     props: ['student'],
@@ -148,12 +148,12 @@ export const StudentModal = {
             this.students = StudentService.get().filter((student) => {
                 switch (choice) {
                     case 'email':
-                        return student.email.toLowerCase().search(this.searchInput) !== -1;
+                        return student.email.toLowerCase().search(this.searchInput.toLowerCase()) !== -1;
                     case 'telefone':
                         return student.phone.search(this.searchInput) !== -1;
                     default:
                         // TODO: Fix not ASCII broken and improve filter match quality
-                        return student.name.toLowerCase().search(this.searchInput) !== -1;
+                        return student.name.toLowerCase().search(this.searchInput.toLowerCase()) !== -1;
                 }
             })
         }

@@ -99,11 +99,11 @@ Vue.component('teacher-dropdown', {
     }
 });
 
-Vue.component('student-dropdown',{
+Vue.component('student-dropdown', {
     props: ['students'],
 
-    template:`    
-        <div class="ui fluid multiple search normal selection dropdown" id="teste">
+    template: `    
+        <div class="ui fluid multiple search normal selection dropdown" id="studentsSelect">
             <input type="hidden">
             <div class="default text">Selecione os alunos</div>
             <div class="menu">
@@ -113,7 +113,7 @@ Vue.component('student-dropdown',{
     `,
 
     mounted: function () {
-        $('#teste').dropdown();
+        $('#studentsSelect').dropdown();
         this.getStudents();
     },
 
@@ -125,8 +125,8 @@ Vue.component('student-dropdown',{
     },
 
     methods: {
-        getStudents: function(){
-            this.allStudents = StudentService.get();            
+        getStudents: function () {
+            this.allStudents = StudentService.get();
         }
     }
 });
@@ -141,7 +141,7 @@ export const GroupModal = {
                 <div class="thirteen wide column">
                     <div class="ui action input fluid">
                         <input type="text" placeholder="Pesquisa..." v-model="searchInput"/>
-                        <div class="ui basic floating dropdown button">
+                        <div class="ui basic floating dropdown button" id="filterGroup">
                             <div class="text">Filtro</div>
                             <i class="dropdown icon"></i>
                             <div class="menu">
@@ -188,7 +188,7 @@ export const GroupModal = {
                     <div class="sixteen wide column">
                         <teacher-dropdown></teacher-dropdown>
                     </div>
-										<div class="sixteen wide column">
+					<div class="sixteen wide column">
                         <student-dropdown></student-dropdown>
                     </div>
                 </div>
@@ -227,31 +227,36 @@ export const GroupModal = {
         },
         confirm: function () {
             //TODO validate groups field 
-            let studentsArray = [];   
-					
-            Array.from(document.getElementsByClassName('item active filtered')).forEach((a) => {
-                if(a != undefined)
-                    studentsArray.push(a.id);
-            });
-					
+            let studentsArray = $('#studentsSelect').dropdown('get value');
+            let teacher = $('#teacherSelect').dropdown('get value');
+
             this.group.studentsIds = studentsArray;
-            this.group.teacherId = document.getElementsByClassName('item active selected')[0].id;
+            this.group.teacherId = teacher;
 
             if (this.group.id === 0) {
                 GroupService.add(this.group)
             } else {
                 GroupService.update(this.group)
             }
-					
+
             this.group = new Group()
             this.showInput = false;
         },
         search: function () {
-            // TODO: Fix not ASCII broken
+            const choice = $('#filterGroup').dropdown('get value')
+
             this.groups = GroupService.get().filter((group) => {
-                return group.identification.toLowerCase().search(this.searchInput) !== -1;
+                switch (choice) {
+                    case 'modalidade':
+                        return group.modality.toLowerCase().search(this.searchInput.toLowerCase()) !== -1;
+                    case 'horário':
+                        return group.scheduledTime.search(this.searchInput) !== -1;
+                    default:
+                        // TODO: Fix not ASCII broken and improve filter match quality
+                        return group.identification.toLowerCase().search(this.searchInput) !== -1;
+                }
             })
-        },
+        }
     },
 
     data: () => {

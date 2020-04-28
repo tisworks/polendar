@@ -75,7 +75,7 @@ export const LessonModal = {
                 <div class="thirteen wide column">
                     <div class="ui action input fluid">
                         <input type="text" placeholder="Pesquisa..." v-model="searchInput">
-                        <div class="ui basic floating dropdown button">
+                        <div class="ui basic floating dropdown button" id="filterLesson">
                             <div class="text">Filtro</div>
                             <i class="dropdown icon"></i>
                             <div class="menu">
@@ -151,9 +151,16 @@ export const LessonModal = {
             this.showInput = false;
         },
         search: function () {
-            // TODO: Fix not ASCII broken
+            const choice = $('#filterLesson').dropdown('get value')
+
             this.lessons = LessonService.get().filter((lesson) => {
-                return lesson.type.toLowerCase().search(this.searchInput) !== -1;
+                switch (choice) {
+                    case 'data':
+                        return lesson.date.toLowerCase().search(this.searchInput) !== -1;
+                    default:
+                        // TODO: Fix not ASCII broken and improve filter match quality
+                        return lesson.type.toLowerCase().search(this.searchInput) !== -1;
+                }
             })
         }
     },
