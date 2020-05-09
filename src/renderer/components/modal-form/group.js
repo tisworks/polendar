@@ -19,7 +19,10 @@ Vue.component('group-list-item', {
                             <br><b>Horário:</b> {{group.scheduledTime}}
                             <br><b>Vagas:</b> {{group.numberOfVacancies}}
                             <br><b>Professor(a):</b> {{group.teacherId}}
-                            <br><b>Alunos:</b> {{group.studentsIds}}
+                            <br><br><b>Alunos:</b>
+                            <div v-for="st in group.studentsIds" :key="st.id">
+                                {{st.name}}
+                            </div> 
                         </div>                                     
                     </div>
                     <div class="seven wide right aligned column">
@@ -107,7 +110,9 @@ Vue.component('student-dropdown', {
             <input type="hidden">
             <div class="default text">Selecione os alunos</div>
             <div class="menu">
-                <div class="item" v-bind:id="st.id" v-for="st in allStudents" v-bind:key="st.id">{{st.name}}</div>                     
+                <div class="item" v-for="st in allStudents" v-bind:key="st.id" v-bind:data-value="[st.id, st.name]">
+                    {{st.name}}
+                </div>                     
             </div>
         </div>
     `,
@@ -204,8 +209,8 @@ export const GroupModal = {
             </div>
             <div class="ui segment scrolling content">
                 <div class="ui relaxed divided animated list">
-                    <group-list-item v-for="st in groups" v-bind:key="st.id" 
-                        v-bind:group="st" v-on:edit:group="group = $event; showInput = true">
+                    <group-list-item v-for="gp in groups" v-bind:key="gp.id" 
+                        v-bind:group="gp" v-on:edit:group="group = $event; showInput = true">
                     </group-list-item>
                 </div>
             </div>
@@ -227,11 +232,20 @@ export const GroupModal = {
         },
         confirm: function () {
             //TODO validate groups field 
-            let studentsArray = $('#studentsSelect').dropdown('get value');
             let teacher = $('#teacherSelect').dropdown('get value');
-
-            this.group.studentsIds = studentsArray;
             this.group.teacherId = teacher;
+            
+            let studentsArray = $('#studentsSelect').dropdown('get value').split(',');
+            let jsonStudents = new Array();            
+            for(let i=0; i< studentsArray.length; i+=2)
+            {                
+                let student = {'id': '', 'name': ''};
+                student.id = studentsArray[i];                
+                student.name = studentsArray[i+1];
+                jsonStudents.push(student)
+            }            
+            this.group.studentsIds = jsonStudents;
+            
 
             if (this.group.id === 0) {
                 GroupService.add(this.group)
