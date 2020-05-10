@@ -18,7 +18,7 @@ Vue.component('group-list-item', {
                             <b>Modalidade:</b> {{group.modality}}
                             <br><b>Horário:</b> {{group.scheduledTime}}
                             <br><b>Vagas:</b> {{group.numberOfVacancies}}
-                            <br><b>Professor(a):</b> {{group.teacherId}}
+                            <br><b>Professor(a):</b> {{group.teacher.name}}
                             <br><b>Alunos:</b> {{group.studentsIds}}
                         </div>                                     
                     </div>
@@ -67,34 +67,46 @@ Vue.component('group-list-item', {
 });
 
 Vue.component('teacher-dropdown', {
-    props: ['teacherId'],
+    props: ['teacher'],
 
     template: `
         <div class="ui fluid search selection dropdown" id="teacherSelect">
-            <input type="hidden" name="teacher" v-model="teacherId">
-            <div class="default text">Selecione um(a) Professor(a)</div>
-            <div class="menu">
-                <div class="item" v-bind:id="tc.id" v-for="tc in teachers" :key="tc.id">
-                    {{tc.name}}
-                </div>
-            </div>
+            <input type="hidden" name="teacher">
+            <div class="default text"></div>
         </div>
     `,
 
     mounted: function () {
-        $('#teacherSelect').dropdown();
-        this.getTeachers();
+        this.setTeachersDropdown();
     },
 
     data: () => {
-        return {
-            teachers: []
-        }
+        return {}
     },
 
     methods: {
-        getTeachers: function () {
-            this.teachers = TeacherService.get();
+        setTeachersDropdown: function () {
+            let teachers = TeacherService.get();
+            let teachersDropdown = { placeholder: 'Selecione um(a) Professor(a)', values: [] }
+
+            for (const key in teachers) {
+                let selectOp;
+
+                if (teachers[key].id == this.teacher.id) {
+                    selectOp = true;
+                } else {
+                    selectOp = false;
+                }
+
+                teachersDropdown.values.push({
+                    name: teachers[key].name,
+                    value: teachers[key].id,
+                    selected: selectOp
+                });
+
+            }
+
+            $('#teacherSelect').dropdown(teachersDropdown);
         }
     }
 });
@@ -186,7 +198,7 @@ export const GroupModal = {
                         </div>
                     </div>
                     <div class="sixteen wide column">
-                        <teacher-dropdown></teacher-dropdown>
+                        <teacher-dropdown v-bind:teacher="group.teacher"></teacher-dropdown>
                     </div>
 					<div class="sixteen wide column">
                         <student-dropdown></student-dropdown>
@@ -228,10 +240,11 @@ export const GroupModal = {
         confirm: function () {
             //TODO validate groups field 
             let studentsArray = $('#studentsSelect').dropdown('get value');
-            let teacher = $('#teacherSelect').dropdown('get value');
+            let teacher = $('#teacherSelect').dropdown('get value').split(',');
+            teacher = { "id": teacher[0], "name": teacher[1] };
 
             this.group.studentsIds = studentsArray;
-            this.group.teacherId = teacher;
+            this.group.teacher = teacher;
 
             if (this.group.id === 0) {
                 GroupService.add(this.group)
@@ -267,8 +280,7 @@ export const GroupModal = {
             searchInput: "",
             groups: [],
             students: [],
-            teacher: new Teacher(),
-            teacherId: ""
+            teacher: new Teacher()
         }
     }
 }
