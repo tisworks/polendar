@@ -108,30 +108,46 @@ Vue.component('student-dropdown', {
     template: `    
         <div class="ui fluid multiple search normal selection dropdown" id="studentsSelect">
             <input type="hidden">
-            <div class="default text">Selecione os alunos</div>
-            <div class="menu">
-                <div class="item" v-for="st in allStudents" v-bind:key="st.id" v-bind:data-value="[st.id, st.name]">
-                    {{st.name}}
-                </div>                     
-            </div>
+            <div class="default text"></div>
+            <div class="menu"></div>
         </div>
     `,
 
-    mounted: function () {
-        $('#studentsSelect').dropdown();
-        this.getStudents();
+    mounted: function () {        
+        this.getStudents();        
+        $('#studentsSelect').dropdown(this.studentsDropDownList);
     },
 
     data: () => {
-        return {
-            student: new Student(),
-            allStudents: []
+        return {            
+            studentsDropDownList: {}
         }
     },
 
     methods: {
         getStudents: function () {
-            this.allStudents = StudentService.get();
+            let allStudents = StudentService.get();  
+            this.studentsDropDownList = this.filterStudents(allStudents, this.students);             
+        },
+        filterStudents: function (allStudents, students) {
+            let studentsDropDownList = {placeholder: 'Selecione os alunos', values: []};
+
+            allStudents.forEach(e => {
+                let selectedOption = false;
+                
+                for(let i in students) {
+                    if(students[i].id == e.id)
+                    selectedOption = true;
+                }
+
+                studentsDropDownList.values.push({
+                    name: e.name,
+                    value: [e.id, e.name],
+                    selected: selectedOption
+                })  
+            });
+            
+            return studentsDropDownList;
         }
     }
 });
@@ -194,7 +210,7 @@ export const GroupModal = {
                         <teacher-dropdown></teacher-dropdown>
                     </div>
 					<div class="sixteen wide column">
-                        <student-dropdown></student-dropdown>
+                        <student-dropdown v-bind:students="group.studentsIds"></student-dropdown>
                     </div>
                 </div>
                 <div class="ui center aligned padded grid">
