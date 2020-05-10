@@ -18,7 +18,7 @@ Vue.component('group-list-item', {
                             <b>Modalidade:</b> {{group.modality}}
                             <br><b>Horário:</b> {{group.scheduledTime}}
                             <br><b>Vagas:</b> {{group.numberOfVacancies}}
-                            <br><b>Professor(a):</b> {{group.teacher.name}
+                            <br><b>Professor(a):</b> {{group.teacher.name}}
                             <br><br><b>Alunos:</b>
                             <div v-for="st in group.studentsIds" :key="st.id">
                                 {{st.name}}
@@ -95,7 +95,7 @@ Vue.component('teacher-dropdown', {
             for (const key in teachers) {
                 let selectOp;
 
-                if (teachers[key].id == this.teacher.id) {
+                if (this.teacher && teachers[key].id == this.teacher.id) {
                     selectOp = true;
                 } else {
                     selectOp = false;
@@ -103,7 +103,7 @@ Vue.component('teacher-dropdown', {
 
                 teachersDropdown.values.push({
                     name: teachers[key].name,
-                    value: teachers[key].id,
+                    value: [teachers[key].id, teachers[key].name],
                     selected: selectOp
                 });
 
@@ -125,40 +125,40 @@ Vue.component('student-dropdown', {
         </div>
     `,
 
-    mounted: function () {        
-        this.getStudents();        
+    mounted: function () {
+        this.getStudents();
         $('#studentsSelect').dropdown(this.studentsDropDownList);
     },
 
     data: () => {
-        return {            
+        return {
             studentsDropDownList: {}
         }
     },
 
     methods: {
         getStudents: function () {
-            let allStudents = StudentService.get();  
-            this.studentsDropDownList = this.filterStudents(allStudents, this.students);             
+            let allStudents = StudentService.get();
+            this.studentsDropDownList = this.filterStudents(allStudents, this.students);
         },
         filterStudents: function (allStudents, students) {
-            let studentsDropDownList = {placeholder: 'Selecione os alunos', values: []};
+            let studentsDropDownList = { placeholder: 'Selecione os alunos', values: [] };
 
             allStudents.forEach(e => {
                 let selectedOption = false;
-                
-                for(let i in students) {
-                    if(students[i].id == e.id)
-                    selectedOption = true;
+
+                for (let i in students) {
+                    if (students[i].id == e.id)
+                        selectedOption = true;
                 }
 
                 studentsDropDownList.values.push({
                     name: e.name,
                     value: [e.id, e.name],
                     selected: selectedOption
-                })  
+                })
             });
-            
+
             return studentsDropDownList;
         }
     }
@@ -260,20 +260,20 @@ export const GroupModal = {
         },
         confirm: function () {
             //TODO validate groups field 
-            let teacher = $('#teacherSelect').dropdown('get value').split(',');     
+            let teacher = $('#teacherSelect').dropdown('get value').split(',');
             let studentsArray = $('#studentsSelect').dropdown('get value').split(',');
             let jsonStudents = new Array();
-          
+
             teacher = { "id": teacher[0], "name": teacher[1] };
             this.group.teacher = teacher;
-          
-            for(let i=0; i< studentsArray.length; i+=2) {                
-                let student = {'id': '', 'name': ''};
-                student.id = studentsArray[i];                
-                student.name = studentsArray[i+1];
+
+            for (let i = 0; i < studentsArray.length; i += 2) {
+                let student = { 'id': '', 'name': '' };
+                student.id = studentsArray[i];
+                student.name = studentsArray[i + 1];
                 jsonStudents.push(student)
             }
-          
+
             this.group.studentsIds = jsonStudents;
 
             if (this.group.id === 0) {
