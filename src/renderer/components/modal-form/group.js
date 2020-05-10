@@ -18,7 +18,7 @@ Vue.component('group-list-item', {
                             <b>Modalidade:</b> {{group.modality}}
                             <br><b>Horário:</b> {{group.scheduledTime}}
                             <br><b>Vagas:</b> {{group.numberOfVacancies}}
-                            <br><b>Professor(a):</b> {{group.teacherId}}
+                            <br><b>Professor(a):</b> {{group.teacher.name}
                             <br><br><b>Alunos:</b>
                             <div v-for="st in group.studentsIds" :key="st.id">
                                 {{st.name}}
@@ -70,34 +70,46 @@ Vue.component('group-list-item', {
 });
 
 Vue.component('teacher-dropdown', {
-    props: ['teacherId'],
+    props: ['teacher'],
 
     template: `
         <div class="ui fluid search selection dropdown" id="teacherSelect">
-            <input type="hidden" name="teacher" v-model="teacherId">
-            <div class="default text">Selecione um(a) Professor(a)</div>
-            <div class="menu">
-                <div class="item" v-bind:id="tc.id" v-for="tc in teachers" :key="tc.id">
-                    {{tc.name}}
-                </div>
-            </div>
+            <input type="hidden" name="teacher">
+            <div class="default text"></div>
         </div>
     `,
 
     mounted: function () {
-        $('#teacherSelect').dropdown();
-        this.getTeachers();
+        this.setTeachersDropdown();
     },
 
     data: () => {
-        return {
-            teachers: []
-        }
+        return {}
     },
 
     methods: {
-        getTeachers: function () {
-            this.teachers = TeacherService.get();
+        setTeachersDropdown: function () {
+            let teachers = TeacherService.get();
+            let teachersDropdown = { placeholder: 'Selecione um(a) Professor(a)', values: [] }
+
+            for (const key in teachers) {
+                let selectOp;
+
+                if (teachers[key].id == this.teacher.id) {
+                    selectOp = true;
+                } else {
+                    selectOp = false;
+                }
+
+                teachersDropdown.values.push({
+                    name: teachers[key].name,
+                    value: teachers[key].id,
+                    selected: selectOp
+                });
+
+            }
+
+            $('#teacherSelect').dropdown(teachersDropdown);
         }
     }
 });
@@ -207,7 +219,7 @@ export const GroupModal = {
                         </div>
                     </div>
                     <div class="sixteen wide column">
-                        <teacher-dropdown></teacher-dropdown>
+                        <teacher-dropdown v-bind:teacher="group.teacher"></teacher-dropdown>
                     </div>
 					<div class="sixteen wide column">
                         <student-dropdown v-bind:students="group.studentsIds"></student-dropdown>
@@ -248,20 +260,21 @@ export const GroupModal = {
         },
         confirm: function () {
             //TODO validate groups field 
-            let teacher = $('#teacherSelect').dropdown('get value');
-            this.group.teacherId = teacher;
-            
+            let teacher = $('#teacherSelect').dropdown('get value').split(',');     
             let studentsArray = $('#studentsSelect').dropdown('get value').split(',');
-            let jsonStudents = new Array();            
-            for(let i=0; i< studentsArray.length; i+=2)
-            {                
+            let jsonStudents = new Array();
+          
+            teacher = { "id": teacher[0], "name": teacher[1] };
+            this.group.teacher = teacher;
+          
+            for(let i=0; i< studentsArray.length; i+=2) {                
                 let student = {'id': '', 'name': ''};
                 student.id = studentsArray[i];                
                 student.name = studentsArray[i+1];
                 jsonStudents.push(student)
-            }            
+            }
+          
             this.group.studentsIds = jsonStudents;
-            
 
             if (this.group.id === 0) {
                 GroupService.add(this.group)
@@ -297,8 +310,7 @@ export const GroupModal = {
             searchInput: "",
             groups: [],
             students: [],
-            teacher: new Teacher(),
-            teacherId: ""
+            teacher: new Teacher()
         }
     }
 }
