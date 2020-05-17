@@ -1,9 +1,9 @@
-import { Group } from "../../../modules/model/group.js";
-import { GroupService } from "../../../modules/service/group.js"
-import { Student } from "../../../modules/model/student.js"
-import { StudentService } from "../../../modules/service/student.js"
-import { Teacher } from "../../../modules/model/teacher.js";
-import { TeacherService } from "../../../modules/service/teacher.js"
+import { Group } from '../../../modules/model/group.js';
+import { GroupService } from '../../../modules/service/group.js';
+import { Student } from '../../../modules/model/student.js';
+import { StudentService } from '../../../modules/service/student.js';
+import { Teacher } from '../../../modules/model/teacher.js';
+import { TeacherService } from '../../../modules/service/teacher.js';
 
 Vue.component('group-list-item', {
     props: ['group'],
@@ -21,7 +21,7 @@ Vue.component('group-list-item', {
                             <br><b>Professor(a):</b> {{group.teacher.name}}
                             <br><br><b>Alunos:</b>
                             <div v-for="st in group.studentsIds" :key="st.id">
-                                {{st.id}}
+                                {{st.name}}
                             </div> 
                         </div>                                     
                     </div>
@@ -58,15 +58,15 @@ Vue.component('group-list-item', {
         },
         cancelDelete: function () {
             this.deleteConfirm = false;
-        }
+        },
     },
 
     data: () => {
         return {
             showItem: true,
-            deleteConfirm: false
-        }
-    }
+            deleteConfirm: false,
+        };
+    },
 });
 
 Vue.component('teacher-dropdown', {
@@ -84,13 +84,13 @@ Vue.component('teacher-dropdown', {
     },
 
     data: () => {
-        return {}
+        return {};
     },
 
     methods: {
         setTeachersDropdown: function () {
             let teachers = TeacherService.get();
-            let teachersDropdown = { placeholder: 'Selecione um(a) Professor(a)', values: [] }
+            let teachersDropdown = { placeholder: 'Selecione um(a) Professor(a)', values: [] };
 
             for (const key in teachers) {
                 let selectOp;
@@ -104,14 +104,13 @@ Vue.component('teacher-dropdown', {
                 teachersDropdown.values.push({
                     name: teachers[key].name,
                     value: [teachers[key].id, teachers[key].name],
-                    selected: selectOp
+                    selected: selectOp,
                 });
-
             }
 
             $('#teacherSelect').dropdown(teachersDropdown);
-        }
-    }
+        },
+    },
 });
 
 Vue.component('student-dropdown', {
@@ -132,8 +131,8 @@ Vue.component('student-dropdown', {
 
     data: () => {
         return {
-            studentsDropDownList: {}
-        }
+            studentsDropDownList: {},
+        };
     },
 
     methods: {
@@ -144,24 +143,23 @@ Vue.component('student-dropdown', {
         filterStudents: function (allStudents, students) {
             let studentsDropDownList = { placeholder: 'Selecione os alunos', values: [] };
 
-            allStudents.forEach(e => {
+            allStudents.forEach((e) => {
                 let selectedOption = false;
 
                 for (let i in students) {
-                    if (students[i].id == e.id)
-                        selectedOption = true;
+                    if (students[i].id == e.id) selectedOption = true;
                 }
 
                 studentsDropDownList.values.push({
                     name: e.name,
                     value: e.id,
-                    selected: selectedOption
-                })
+                    selected: selectedOption,
+                });
             });
 
             return studentsDropDownList;
-        }
-    }
+        },
+    },
 });
 
 export const GroupModal = {
@@ -259,34 +257,35 @@ export const GroupModal = {
             this.showInput = false;
         },
         confirm: function () {
-            //TODO validate groups field 
+            //TODO validate groups field
             let teacher = $('#teacherSelect').dropdown('get value').split(',');
             let studentsArray = $('#studentsSelect').dropdown('get value').split(',');
-            let jsonStudents = new Array();
+            let allStudents = StudentService.get();
 
-            teacher = { "id": teacher[0], "name": teacher[1] };
+            teacher = { id: teacher[0], name: teacher[1] };
             this.group.teacher = teacher;
 
-            for (let i = 0; i < studentsArray.length; i += 2) {
-                let student = { 'id': '', 'name': '' };
-                student.id = studentsArray[i];
-                student.name = studentsArray[i + 1];
-                jsonStudents.push(student)
-            }
+            let jsonStudents = allStudents.filter((s) => studentsArray.includes(s.id.toString()));
+
+            //TODO tirar opcoes a mais
+
+            jsonStudents = jsonStudents.map((s) => {
+                return { id: s.id, name: s.name };
+            });
 
             this.group.studentsIds = jsonStudents;
 
             if (this.group.id === 0) {
-                GroupService.add(this.group)
+                GroupService.add(this.group);
             } else {
-                GroupService.update(this.group)
+                GroupService.update(this.group);
             }
 
-            this.group = new Group()
+            this.group = new Group();
             this.showInput = false;
         },
         search: function () {
-            const choice = $('#filterGroup').dropdown('get value')
+            const choice = $('#filterGroup').dropdown('get value');
 
             this.groups = GroupService.get().filter((group) => {
                 switch (choice) {
@@ -298,8 +297,8 @@ export const GroupModal = {
                         // TODO: Fix not ASCII broken and improve filter match quality
                         return group.identification.toLowerCase().search(this.searchInput) !== -1;
                 }
-            })
-        }
+            });
+        },
     },
 
     data: () => {
@@ -307,10 +306,10 @@ export const GroupModal = {
             group: new Group(),
             student: new Student(),
             showInput: false,
-            searchInput: "",
+            searchInput: '',
             groups: [],
             students: [],
-            teacher: new Teacher()
-        }
-    }
-}
+            teacher: new Teacher(),
+        };
+    },
+};
