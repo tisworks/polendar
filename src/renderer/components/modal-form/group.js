@@ -174,6 +174,12 @@ export const GroupModal = {
                 <div class="thirteen wide column">
                     <div class="ui action input fluid">
                         <input type="text" placeholder="Pesquisa..." v-model="searchInput"/>
+                        <div class="ui icon basic button">
+                            <div class="ui checkbox" id="emptySeatsCheck">
+                                <input type="checkbox">
+                                <label>Com Vagas</label>
+                            </div>
+                        </div>
                         <div class="ui basic floating dropdown button" id="filterGroup">
                             <div class="text">Filtro</div>
                             <i class="dropdown icon"></i>
@@ -259,7 +265,7 @@ export const GroupModal = {
             this.showInput = false;
         },
         confirm: function () {
-            //TODO validate groups field 
+            //TODO validate groups field
             let teacher = $('#teacherSelect').dropdown('get value').split(',');
             let studentsArray = $('#studentsSelect').dropdown('get value').split(',');
             let jsonStudents = new Array();
@@ -299,6 +305,12 @@ export const GroupModal = {
                         return group.identification.toLowerCase().search(this.searchInput) !== -1;
                 }
             })
+
+            if ($('#emptySeatsCheck').checkbox('is checked')) {
+                this.groups = this.groups.filter((group) => {
+                    return group.numberOfVacancies > 0;
+                })
+            }
         }
     },
 
