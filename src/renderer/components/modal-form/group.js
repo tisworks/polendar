@@ -21,7 +21,7 @@ Vue.component('group-list-item', {
                             <br><b>Professor(a):</b> {{group.teacher.name}}
                             <br><br><b>Alunos:</b>
                             <div v-for="st in group.studentsIds" :key="st.id">
-                                {{st.name}}
+                                {{st.id}}
                             </div> 
                         </div>                                     
                     </div>
@@ -154,7 +154,7 @@ Vue.component('student-dropdown', {
 
                 studentsDropDownList.values.push({
                     name: e.name,
-                    value: [e.id, e.name],
+                    value: e.id,
                     selected: selectedOption
                 })
             });
