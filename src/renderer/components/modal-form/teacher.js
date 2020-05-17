@@ -12,10 +12,9 @@ Vue.component('teacher-list-item', {
                         <a class="header">{{teacher.name}}</a>
                         <div class="description">
                             <b>Tel:</b> {{teacher.phone}}<br><b>Email:</b> {{teacher.email}}
-                        </div>
-                        <br>
-                        <div class="descriptionBank">
-                            <b>Banco: </b>{{teacher.bankName}}<br><b>Agência: </b>{{teacher.bankAgency}}<br><b>Conta: </b>{{teacher.bankAccount}}
+                            <br>
+                            <br>                            
+                            <b>Banco: </b>{{teacher.bankName}}<br><b>Agência: </b>{{teacher.bankAgency}}<br><b>Conta: </b>{{teacher.bankAccount}}                            
                         </div>              
                     </div>
                     <div class="seven wide right aligned column">

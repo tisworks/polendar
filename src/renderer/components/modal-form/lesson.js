@@ -1,5 +1,7 @@
 import { Lesson } from "../../../modules/model/lesson.js";
 import { LessonService } from "../../../modules/service/lesson.js"
+import { Group } from '../../../modules/model/group.js';
+import { GroupService } from '../../../modules/service/group.js';
 
 Vue.component('lesson-list-item', {
     props: ['lesson'],
@@ -9,15 +11,19 @@ Vue.component('lesson-list-item', {
             <div class="content">
                 <div class="ui grid">
                     <div class="nine wide column">
-                        <a class="header">{{lesson.type}}</a>
+                        <a class="header">{{lesson.type}}</a>                        
                         <div class="description">
-                            {{lesson.date}}
+                            <b>Turma:</b> {{lesson.group.identification}}
+                            <br>
+                            <b>Data:</b> {{lesson.date}}
+                            <br>
+                            <b>Horário:</b> {{lesson.scheduledTime}}
                             <br>
                             <div v-if="lesson.replacement">
-                                Reposição: Sim
+                                <b>Reposição:</b> Sim
                             </div>
                             <div v-else>
-                                Reposição: Não
+                                <b>Reposição:</b> Não
                             </div>
                         </div>        
                     </div>
@@ -65,6 +71,50 @@ Vue.component('lesson-list-item', {
     }
 });
 
+Vue.component('group-dropdown', {
+    props: ['group'],
+
+    template: `
+        <div class="ui fluid search selection dropdown" id="groupSelect">
+            <input type="hidden" name="group">
+            <div class="default text"></div>
+        </div>
+    `,
+
+    mounted: function () {
+        this.setGroupsDropdown();
+    },
+
+    data: () => {
+        return {};
+    },
+
+    methods: {
+        setGroupsDropdown: function () {
+            let groups = GroupService.get();
+            let groupsDropdown = { placeholder: 'Selecione uma turma', values: [] };
+
+            for (const key in groups) {
+                let selectOp;
+
+                if (this.group && groups[key].id == this.group.id) {
+                    selectOp = true;
+                } else {
+                    selectOp = false;
+                }
+
+                groupsDropdown.values.push({
+                    name: groups[key].identification,
+                    value: [groups[key].id, groups[key].identification],
+                    selected: selectOp,
+                });
+            }
+
+            $('#groupSelect').dropdown(groupsDropdown);
+        },
+    },
+});
+
 export const LessonModal = {
     template: `
     <div class="ui modal lesson-modal">
@@ -100,6 +150,13 @@ export const LessonModal = {
                 <div class="ui labeled input">
                     <div class="ui label">Data</div>
                     <input type="text" id="lesson-date" v-model="lesson.date">
+                </div>
+                <div class="ui labeled input">
+                    <div class="ui label">Horário</div>
+                    <input type="text" id="lesson-scheduledTime" v-model="lesson.scheduledTime">
+                </div>
+                <div class="eight wide column">
+                    <group-dropdown v-bind:group="lesson.group"></group-dropdown>
                 </div>
                 <div class="ui labeled input">
                     <div class="ui checkbox">
@@ -142,13 +199,26 @@ export const LessonModal = {
         },
         confirm: function () {
             //TODO validate lesson field
-            if (this.lesson.id === 0) {
-                LessonService.add(this.lesson)
+            let allLessons = LessonService.get();
+            let validation = allLessons.filter(l => l.scheduledTime == this.lesson.scheduledTime && l.date == this.lesson.date);
+
+            if(validation.length > 0) {
+                alert(`A aula ${validation[0].type} já está marcada para este mesmo dia e horário!`);
             } else {
-                LessonService.update(this.lesson)
+                let group = $('#groupSelect').dropdown('get value').split(',');
+
+                group = { id: group[0], identification: group[1] };
+                this.lesson.group = group;
+    
+                if (this.lesson.id === 0) {
+                    LessonService.add(this.lesson)
+                } else {
+                    LessonService.update(this.lesson)
+                }
+                
+                this.lesson = new Lesson()
+                this.showInput = false;
             }
-            this.lesson = new Lesson()
-            this.showInput = false;
         },
         search: function () {
             const choice = $('#filterLesson').dropdown('get value')
