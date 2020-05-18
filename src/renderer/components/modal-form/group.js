@@ -15,8 +15,7 @@ Vue.component('group-list-item', {
                     <div class="nine wide column">
                         <a class="header">{{group.identification}}</a>
                         <div class="description">
-                            <b>Modalidade:</b> {{group.modality}}
-                            <br><b>Horário:</b> {{group.scheduledTime}}
+                            <b>Modalidade:</b> {{group.modality}}                            
                             <br><b>Vagas:</b> {{group.numberOfVacancies}}
                             <br><b>Professor(a):</b> {{group.teacher.name}}
                             <br><br><b>Alunos:</b>
@@ -212,17 +211,11 @@ export const GroupModal = {
                     </div>
                     <div class="eight wide column">
                         <div class="ui fluid labeled input">
-                            <div class="ui label">Horário</div>
-                            <input type="text" v-model="group.scheduledTime"/>
-                        </div>
-                    </div>
-                    <div class="eight wide column">
-                        <div class="ui fluid labeled input">
                             <div class="ui label">Vagas</div>
                             <input type="text" v-model="group.numberOfVacancies"/>
                         </div>
                     </div>
-                    <div class="sixteen wide column">
+                    <div class="eight wide column">
                         <teacher-dropdown v-bind:teacher="group.teacher"></teacher-dropdown>
                     </div>
 					<div class="sixteen wide column">
@@ -320,8 +313,7 @@ export const GroupModal = {
             showInput: false,
             searchInput: '',
             groups: [],
-            students: [],
-            teacher: new Teacher(),
+            students: []
         };
     },
 };

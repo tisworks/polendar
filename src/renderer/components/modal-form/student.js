@@ -1,5 +1,5 @@
-import { Student } from "../../../modules/model/student.js";
-import { StudentService } from "../../../modules/service/student.js"
+import { Student } from '../../../modules/model/student.js';
+import { StudentService } from '../../../modules/service/student.js';
 
 Vue.component('student-list-item', {
     props: ['student'],
@@ -47,15 +47,15 @@ Vue.component('student-list-item', {
         },
         cancelDelete: function () {
             this.deleteConfirm = false;
-        }
+        },
     },
 
     data: () => {
         return {
             showItem: true,
-            deleteConfirm: false
-        }
-    }
+            deleteConfirm: false,
+        };
+    },
 });
 
 export const StudentModal = {
@@ -87,17 +87,25 @@ export const StudentModal = {
                 </div>
             </div>
             <div class="ui segment" v-if="showInput">
-                <div class="ui labeled input">
-                    <div class="ui label">Nome</div>
-                    <input type="text" v-model="student.name">
-                </div>
-                <div class="ui labeled input">
-                    <div class="ui label">Telefone</div>
-                    <input type="text" id="student-phone" v-model="student.phone" v-mask="'(##) # ####-####'">
-                </div>
-                <div class="ui labeled input">
-                    <div class="ui label">Email</div>
-                    <input type="text" v-model="student.email">
+                <div class="ui grid">
+                    <div class="six wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Nome</div>
+                            <input type="text" v-model="student.name">
+                        </div>
+                    </div>
+                    <div class="five wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Telefone</div>
+                            <input type="text" id="student-phone" v-model="student.phone" v-mask="'(##) # ####-####'">
+                        </div>
+                    </div>
+                    <div class="five wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Email</div>
+                            <input type="text" v-model="student.email">
+                        </div>
+                    </div>
                 </div>
                 <div class="ui center aligned padded grid">
                     <div class="row">
@@ -135,15 +143,15 @@ export const StudentModal = {
         confirm: function () {
             //TODO validate students field
             if (this.student.id === 0) {
-                StudentService.add(this.student)
+                StudentService.add(this.student);
             } else {
-                StudentService.update(this.student)
+                StudentService.update(this.student);
             }
-            this.student = new Student()
+            this.student = new Student();
             this.showInput = false;
         },
         search: function () {
-            const choice = $('#filter').dropdown('get value')
+            const choice = $('#filter').dropdown('get value');
 
             this.students = StudentService.get().filter((student) => {
                 switch (choice) {
@@ -155,16 +163,16 @@ export const StudentModal = {
                         // TODO: Fix not ASCII broken and improve filter match quality
                         return student.name.toLowerCase().search(this.searchInput.toLowerCase()) !== -1;
                 }
-            })
-        }
+            });
+        },
     },
 
     data: () => {
         return {
             student: new Student(),
             showInput: false,
-            searchInput: "",
-            students: []
-        }
-    }
-}
+            searchInput: '',
+            students: [],
+        };
+    },
+};
