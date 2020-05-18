@@ -1,5 +1,5 @@
-import { Teacher } from "../../../modules/model/teacher.js";
-import { TeacherService } from "../../../modules/service/teacher.js"
+import { Teacher } from '../../../modules/model/teacher.js';
+import { TeacherService } from '../../../modules/service/teacher.js';
 
 Vue.component('teacher-list-item', {
     props: ['teacher'],
@@ -50,15 +50,15 @@ Vue.component('teacher-list-item', {
         },
         cancelDelete: function () {
             this.deleteConfirm = false;
-        }
+        },
     },
 
     data: () => {
         return {
             showItem: true,
-            deleteConfirm: false
-        }
-    }
+            deleteConfirm: false,
+        };
+    },
 });
 
 export const TeacherModal = {
@@ -90,30 +90,46 @@ export const TeacherModal = {
                 </div>
             </div>
             <div class="ui segment" v-if="showInput">
-                <div class="ui labeled input">
-                    <div class="ui label">Nome</div>
-                    <input type="text" v-model="teacher.name">
-                </div>
-                <div class="ui labeled input">
-                    <div class="ui label">Telefone</div>
-                    <input type="text" id="teacher-phone" v-model="teacher.phone" v-mask="'(##) # ####-####'">
-                </div>
-                <div class="ui labeled input">
-                    <div class="ui label">Email</div>
-                    <input type="text" v-model="teacher.email">
-                </div>
-                <h4 class="ui dividing header">Dados Bancários</h4>
-                <div class="ui labeled input">
-                    <div class="ui label">Banco</div>
-                    <input type="text" v-model="teacher.bankName">
-                </div>
-                <div class="ui labeled input">
-                    <div class="ui label">Agência</div>
-                    <input type="text" v-model="teacher.bankAgency">
-                </div>
-                <div class="ui labeled input">
-                    <div class="ui label">Conta</div>
-                    <input type="text" v-model="teacher.bankAccount">
+                <div class="ui grid">
+                    <div class="six wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Nome</div>
+                            <input type="text" v-model="teacher.name">
+                        </div>
+                    </div>
+                    <div class="five wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Telefone</div>
+                            <input type="text" id="teacher-phone" v-model="teacher.phone" v-mask="'(##) # ####-####'">
+                        </div>
+                    </div>
+                    <div class="five wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Email</div>
+                            <input type="text" v-model="teacher.email">
+                        </div>
+                    </div>
+                    <div class="sixteen wide column">
+                        <h4 class="ui dividing header">Dados Bancários</h4>
+                    </div>
+                    <div class="six wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Banco</div>
+                            <input type="text" v-model="teacher.bankName">
+                        </div>
+                    </div>
+                    <div class="five wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Agência</div>
+                            <input type="text" v-model="teacher.bankAgency">
+                        </div>
+                    </div>
+                    <div class="five wide column">
+                        <div class="ui fluid labeled input">
+                            <div class="ui label">Conta</div>
+                            <input type="text" v-model="teacher.bankAccount">
+                        </div>
+                    </div>
                 </div>
                 <div class="ui center aligned padded grid">
                     <div class="row">
@@ -151,15 +167,15 @@ export const TeacherModal = {
         confirm: function () {
             //TODO validate teachers field
             if (this.teacher.id === 0) {
-                TeacherService.add(this.teacher)
+                TeacherService.add(this.teacher);
             } else {
-                TeacherService.update(this.teacher)
+                TeacherService.update(this.teacher);
             }
-            this.teacher = new Teacher()
+            this.teacher = new Teacher();
             this.showInput = false;
         },
         search: function () {
-            const choice = $('#filterTeacher').dropdown('get value')
+            const choice = $('#filterTeacher').dropdown('get value');
 
             this.teachers = TeacherService.get().filter((teacher) => {
                 switch (choice) {
@@ -171,16 +187,16 @@ export const TeacherModal = {
                         // TODO: Fix not ASCII broken and improve filter match quality
                         return teacher.name.toLowerCase().search(this.searchInput.toLowerCase()) !== -1;
                 }
-            })
-        }
+            });
+        },
     },
 
     data: () => {
         return {
             teacher: new Teacher(),
             showInput: false,
-            searchInput: "",
-            teachers: []
-        }
-    }
-}
+            searchInput: '',
+            teachers: [],
+        };
+    },
+};
