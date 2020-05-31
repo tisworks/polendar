@@ -1,6 +1,7 @@
 import { Lesson } from '../../../modules/model/lesson.js';
 import { LessonService } from '../../../modules/service/lesson.js';
-import { Group } from '../../../modules/model/group.js';
+import { AttendenceList } from '../../../modules/model/attendenceList.js';
+import { AttendenceListService } from '../../../modules/service/attendenceList.js';
 import { GroupService } from '../../../modules/service/group.js';
 
 Vue.component('lesson-list-item', {
@@ -54,7 +55,9 @@ Vue.component('lesson-list-item', {
         edit: function () {
             this.$emit('edit:lesson', this.lesson);
         },
-        deleteLesson: function () {
+        deleteLesson: function () {            
+            let attendenceList = AttendenceListService.get().filter((a) => a.lesson.id == this.lesson.id)[0];
+            AttendenceListService.delete(attendenceList.id);
             LessonService.delete(this.lesson.id);
             this.showItem = false;
         },
@@ -308,15 +311,29 @@ export const LessonModal = {
             if (validation.length > 0 && validation[0].group.id != this.lesson.group.id) {
                 alert(`A turma ${validation[0].group.identification} já tem uma aula marcada para este mesmo dia e horário!`);
             } else {
+                let lessonId;
                 if (this.lesson.id === 0) {
-                    LessonService.add(this.lesson);
+                    lessonId = LessonService.add(this.lesson);
                 } else {
                     LessonService.update(this.lesson);
+                    lessonId = this.lesson.id;
                 }
 
+                let attendenceList = AttendenceListService.get().filter((a) => a.lesson.id == lessonId)[0];
+                if(attendenceList) {
+                    AttendenceListService.delete(attendenceList.id);
+                    attendenceList.studentList = [];
+                    AttendenceListService.add(attendenceList);
+                } else {                    
+                    attendenceList = new AttendenceList();
+                    attendenceList.studentList = [];
+                    attendenceList.lesson = { id: lessonId, type: this.lesson.type };                    
+                    AttendenceListService.add(attendenceList);
+                }
+                
                 this.lesson = new Lesson();
                 this.showInput = false;
-            }
+            }            
         },
         search: function () {
             const choice = $('#filterLesson').dropdown('get value');

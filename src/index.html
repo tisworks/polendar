@@ -48,6 +48,14 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="column">
+                    <div class="ui small circular rotate left reveal image" v-on:click="attendenceListModal">
+                        <img src="static/img/attendenceList.png" class="visible content" style="background-color:#6f9ee8">
+                        <img src="static/img/presencas.png" class="hidden content">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -58,6 +66,7 @@
     <teacher-modal></teacher-modal>
     <lesson-modal></lesson-modal>
     <group-modal></group-modal>
+    <attendence-modal></attendence-modal>
 </div>
 
 </html>
