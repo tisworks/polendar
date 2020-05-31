@@ -64,7 +64,7 @@ export const StudentModal = {
         <i class="close icon"></i>
         <div class="header ui center aligned">Aluno</div>
         <div class="ui content">
-            <div class="ui grid">
+            <div class="ui grid" v-if="!showInput">
                 <div class="thirteen wide column">
                     <div class="ui action input fluid">
                         <input type="text" placeholder="Pesquisa..." v-model="searchInput">
@@ -117,7 +117,7 @@ export const StudentModal = {
                     </div>
                 </div>
             </div>
-            <div class="ui segment scrolling content">
+            <div class="ui segment scrolling content" v-if="!showInput">
                 <div class="ui relaxed divided animated list">
                     <student-list-item v-for="st in students" v-bind:key="st.id" 
                         v-bind:student="st" v-on:edit:student="student = $event; showInput = true">

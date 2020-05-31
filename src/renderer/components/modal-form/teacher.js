@@ -67,7 +67,7 @@ export const TeacherModal = {
         <i class="close icon"></i>
         <div class="header ui center aligned">Professor</div>
         <div class="ui content">
-            <div class="ui grid">
+            <div class="ui grid" v-if="!showInput">
                 <div class="thirteen wide column">
                     <div class="ui action input fluid">
                         <input type="text" placeholder="Pesquisa..." v-model="searchInput">
@@ -141,7 +141,7 @@ export const TeacherModal = {
                     </div>
                 </div>
             </div>
-            <div class="ui segment scrolling content">
+            <div class="ui segment scrolling content" v-if="!showInput">
                 <div class="ui relaxed divided animated list">
                     <teacher-list-item v-for="st in teachers" v-bind:key="st.id" 
                         v-bind:teacher="st" v-on:edit:teacher="teacher = $event; showInput = true">

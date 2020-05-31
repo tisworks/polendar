@@ -2,7 +2,6 @@ import { Group } from '../../../modules/model/group.js';
 import { GroupService } from '../../../modules/service/group.js';
 import { Student } from '../../../modules/model/student.js';
 import { StudentService } from '../../../modules/service/student.js';
-import { Teacher } from '../../../modules/model/teacher.js';
 import { TeacherService } from '../../../modules/service/teacher.js';
 
 Vue.component('group-list-item', {
@@ -167,7 +166,7 @@ export const GroupModal = {
         <i class="close icon"></i>
         <div class="header ui center aligned">Turma</div>
         <div class="ui content">
-            <div class="ui grid">
+            <div class="ui grid" v-if="!showInput">
                 <div class="thirteen wide column">
                     <div class="ui action input fluid">
                         <input type="text" placeholder="Pesquisa..." v-model="searchInput"/>
@@ -232,7 +231,7 @@ export const GroupModal = {
                     </div>
                 </div>
             </div>
-            <div class="ui segment scrolling content">
+            <div class="ui segment scrolling content" v-if="!showInput">
                 <div class="ui relaxed divided animated list">
                     <group-list-item v-for="gp in groups" v-bind:key="gp.id" 
                         v-bind:group="gp" v-on:edit:group="group = $event; showInput = true">
