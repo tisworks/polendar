@@ -219,6 +219,7 @@ export const LessonModal = {
                             <div class="menu">
                                 <div class="item">Tipo</div>
                                 <div class="item">Data</div>
+                                <div class="item">Turma</div>
                             </div>
                         </div>
                         <div class="ui icon blue button" v-on:click="search">
@@ -324,10 +325,12 @@ export const LessonModal = {
             this.lessons = LessonService.get().filter((lesson) => {
                 switch (choice) {
                     case 'data':
-                        return lesson.date.toLowerCase().search(this.searchInput) !== -1;
+                        return lesson.date.toLowerCase().search(this.searchInput.toLowerCase()) !== -1;
+                    case 'turma':
+                        return lesson.group.identification.toLowerCase().search(this.searchInput.toLowerCase()) !== -1;
                     default:
                         // TODO: Fix not ASCII broken and improve filter match quality
-                        return lesson.type.toLowerCase().search(this.searchInput) !== -1;
+                        return lesson.type.toLowerCase().search(this.searchInput.toLowerCase()) !== -1;
                 }
             });
         },
