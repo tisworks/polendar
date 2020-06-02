@@ -258,6 +258,12 @@ export const GroupModal = {
             //TODO validate groups field
             let teacher = $('#teacherSelect').dropdown('get value').split(',');
             let studentsArray = $('#studentsSelect').dropdown('get value').split(',');
+
+            if (studentsArray.length > this.group.numberOfVacancies) {
+                alert("Turma cheia!")
+                return
+            }
+
             let allStudents = StudentService.get();
 
             teacher = { id: teacher[0], name: teacher[1] };
