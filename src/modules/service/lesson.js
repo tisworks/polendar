@@ -1,6 +1,6 @@
 export class LessonService {
     static add(lesson) {
-        this.prototype.repository.add(lesson);
+        return this.prototype.repository.add(lesson);
     }
 
     static get() {

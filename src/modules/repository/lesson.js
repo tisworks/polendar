@@ -19,6 +19,8 @@ export class LessonRepository {
         lessons.values.push(lesson);
 
         this.db.set(schemaName, lessons).write()
+
+        return lesson.id;
     }
 
     get() {

@@ -14,6 +14,10 @@ function lessonModal() {
     $('.ui.modal.lesson-modal').modal('show');
 }
 
+function attendenceListModal() {
+    $('.ui.modal.attendenceList-modal').modal('show');
+}
+
 new Vue({
     el: '#app',
     methods: {
@@ -21,6 +25,7 @@ new Vue({
         teacherModal: teacherModal,
         lessonModal: lessonModal,
         teacherModal: teacherModal,
-        groupModal: groupModal
+        groupModal: groupModal,
+        attendenceListModal: attendenceListModal 
     }
 })
