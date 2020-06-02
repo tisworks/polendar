@@ -61,7 +61,7 @@ Vue.component('attendenceList-list-item', {
     },
 });
 
-Vue.component('student-dropdown', {
+Vue.component('student-list-dropdown', {
     props: ['lesson', 'students'],
 
     template: `    
@@ -140,7 +140,7 @@ export const AttendenceListModal = {
                         </div>
                     </div>
                     <div class="sixteen wide column">
-                        <student-dropdown v-bind:lesson="attendenceList.lesson" v-bind:students="attendenceList.studentList"></student-dropdown>
+                        <student-list-dropdown v-bind:lesson="attendenceList.lesson" v-bind:students="attendenceList.studentList"></student-list-dropdown>
                     </div>
                 </div>
                 <div class="ui center aligned padded grid">
